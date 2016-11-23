@@ -20,4 +20,6 @@ class Logger
     {
         array_push(self::$_logger, $log);
     }
+
+
 }
