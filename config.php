@@ -2,6 +2,10 @@
 /**
  * Configuration file for the app
  */
-$config=[
-  // Some config here
+return [
+    // Default route:
+    'defaultRoute' => [
+        'controller' => 'Default',
+        'action' => 'index',
+    ]
 ];
