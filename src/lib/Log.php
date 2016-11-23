@@ -12,7 +12,7 @@ class Log
     protected $_message;
     protected $_date;
 
-    private function __construct($type, $message)
+    public function __construct($type, $message)
     {
         $this->_type = $type;
         $this->_message = $message;
@@ -38,4 +38,5 @@ class Log
         $log = ['type' => $this->getType(),'message' => $this->getMessage(),'date' => $this->getDate()];
         return $log;
     }
+
 }
