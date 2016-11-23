@@ -34,110 +34,104 @@ class Router
     public static function init()
     {
         // Controller
-        if(isset($_GET['c'])){
+        if (isset($_GET['c'])) {
             self::$_controller = ucfirst($_GET['c']);
             unset($_GET['c']);
-        }elseif(isset($_POST['c'])){
+        } elseif (isset($_POST['c'])) {
             self::$_controller = ucfirst($_POST['c']);
             unset($_POST['c']);
-        }else{
+        } else {
             self::$_controller = Config::get('defaultRoute')['controller'];
         }
 
         // Action
-        if(isset($_GET['a'])){
+        if (isset($_GET['a'])) {
             self::$_action = $_GET['a'];
             unset($_GET['a']);
-        }elseif(isset($_POST['a'])){
+        } elseif (isset($_POST['a'])) {
             self::$_action = $_POST['a'];
             unset($_POST['a']);
-        }else{
+        } else {
             self::$_action = Config::get('defaultRoute')['action'];
         }
 
         // Parameters
-        self::$_params=$_POST + $_GET; // Precedence: post over get
+        self::$_params = $_POST + $_GET; // Precedence: post over get
     }
 
-        /**
-         * Returns the route as an array like [controller, page, params]
-         *
-         * @return array Route parameters
-         */
-        static public
+    /**
+     * Returns the route as an array like [controller, page, params]
+     *
+     * @return array Route parameters
+     */
+    public static function getRoute()
+    {
+        return [
+            'controller' => self::$_controller,
+            'page' => self::$_action,
+            'params' => self::$_params,
+        ];
+    }
 
-        function getRoute()
-        {
-            return [
-                'controller' => self::$_controller,
-                'page' => self::$_action,
-                'params' => self::$_params,
-            ];
-        }
-        /**
-         * Returns a parameter
-         *
-         * @param string $param Parameter to get
-         *
-         * @return mixed Parameter value
-         */
-        static public
-
-        function getParam($param)
-        {
-            if (isset(self::$_params[$param])) {
-                return self::$_params[$param];
-            } else {
-                return null;
-            }
-        }
-        /**
-         * Returns the current action
-         *
-         * @return string
-         */
-        static public
-
-        function getAction()
-        {
-            return self::$_action;
-        }
-        /**
-         * Returns the current controller name
-         *
-         * @return string
-         */
-        static public
-
-        function getController()
-        {
-            return self::$_controller;
-        }
-        /**
-         * Executes the action
-         *
-         * @return void
-         */
-        static public
-
-        function executeAction()
-        {
-            // Check for controller
-            $controllerPath = 'app/Controller/' . self::$_controller . 'Controller.php';
-
-            if (file_exists($controllerPath)) {
-                require_once($controllerPath);
-                $controllerName = self::$_controller . 'Controller';
-                $controller = new $controllerName;
-                // Check for action
-                if (method_exists($controller, self::$_action)) {
-                    $action = self::$_action;
-                    $controller->$action();
-                } else {
-                    die('404 - Action not found');
-                }
-            } else {
-                die('404 - Controller not found (path: ' . $controllerPath . ')');
-            }
+    /**
+     * Returns a parameter
+     *
+     * @param string $param Parameter to get
+     *
+     * @return mixed Parameter value
+     */
+    public static function getParam($param)
+    {
+        if (isset(self::$_params[$param])) {
+            return self::$_params[$param];
+        } else {
+            return null;
         }
     }
+
+    /**
+     * Returns the current action
+     *
+     * @return string
+     */
+    public static function getAction()
+    {
+        return self::$_action;
+    }
+
+    /**
+     * Returns the current controller name
+     *
+     * @return string
+     */
+    public static function getController()
+    {
+        return self::$_controller;
+    }
+
+    /**
+     * Executes the action
+     *
+     * @return void
+     */
+    public static function executeAction()
+    {
+        // Check for controller
+        $controllerPath = 'app/Controller/' . self::$_controller . 'Controller.php';
+
+        if (file_exists($controllerPath)) {
+            require_once($controllerPath);
+            $controllerName = self::$_controller . 'Controller';
+            $controller = new $controllerName;
+            // Check for action
+            if (method_exists($controller, self::$_action)) {
+                $action = self::$_action;
+                $controller->$action();
+            } else {
+                die('404 - Action not found');
+            }
+        } else {
+            die('404 - Controller not found (path: ' . $controllerPath . ')');
+        }
+    }
+}
