@@ -2,6 +2,9 @@
 /**
  * Main controller class
  */
+
+namespace TC\Controller;
+
 abstract class Controller{
 
 

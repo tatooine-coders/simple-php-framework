@@ -3,6 +3,11 @@
 /**
  * Main router class
  */
+
+namespace TC\Router;
+use TC\Lib\Config;
+use App\Controller\DefaultController;
+
 class Router
 {
 
