@@ -1,4 +1,3 @@
 <?php
-/**
- * All the core files to include for a proper boot
- */
+include_once 'console/generateModels.php';
+include_once 'src/Model/database.php';
