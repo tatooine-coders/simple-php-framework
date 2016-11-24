@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Controller;
+use TC\Controller\Controller;
+
 class defaultController extends Controller
 {
 

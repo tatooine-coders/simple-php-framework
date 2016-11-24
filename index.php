@@ -3,10 +3,13 @@
  * This is the app entry point
  */
 
+ use TC\Lib\Config;
+ use TC\Router\Router;
+
 /*
  * Includes
  */
-require_once('includes.php');
+require_once('vendor/autoload.php');
 
 /*
  * Loads the configuration

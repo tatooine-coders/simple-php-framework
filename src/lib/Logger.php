@@ -1,11 +1,8 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Alexandre
- * Date: 23/11/2016
- * Time: 12:56
- */
+namespace TC\Lib;
+use TC\Lib\Log;
+
 abstract class Logger
 {
     protected static $_logger = array();

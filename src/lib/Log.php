@@ -1,11 +1,7 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Alexandre
- * Date: 23/11/2016
- * Time: 14:12
- */
+namespace TC\Lib;
+
 class Log
 {
     protected $_type;

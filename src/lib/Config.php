@@ -5,6 +5,9 @@
  *
  * this class should always be called statically
  */
+
+namespace TC\Lib;
+
 class Config
 {
 
