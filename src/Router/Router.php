@@ -1,12 +1,19 @@
 <?php
-
-/**
- * Main router class
- */
-
 namespace TC\Router;
+
 use TC\Lib\Config;
 
+/**
+ * This file is part of the Simple PHP Framework
+ *
+ * Application router
+ *
+ * @category Router
+ * @package  TC
+ * @author   Manuel Tancoigne <m.tancoigne@gmail.com>
+ * @license  http://www.opensource.org/licenses/mit-license.php MIT License
+ * @link     https://github.com/tatooine-coders/simple-php-framework/
+ */
 class Router
 {
 
@@ -38,10 +45,10 @@ class Router
     public static function init()
     {
         // Controller
-        if (isset($_GET['c'])) {
+        if (!empty($_GET['c'])) {
             self::$_controller = ucfirst($_GET['c']);
             unset($_GET['c']);
-        } elseif (isset($_POST['c'])) {
+        } elseif (!empty($_POST['c'])) {
             self::$_controller = ucfirst($_POST['c']);
             unset($_POST['c']);
         } else {
@@ -49,10 +56,10 @@ class Router
         }
 
         // Action
-        if (isset($_GET['a'])) {
+        if (!empty($_GET['a'])) {
             self::$_action = $_GET['a'];
             unset($_GET['a']);
-        } elseif (isset($_POST['a'])) {
+        } elseif (!empty($_POST['a'])) {
             self::$_action = $_POST['a'];
             unset($_POST['a']);
         } else {
@@ -125,7 +132,7 @@ class Router
 
         if (file_exists($controllerPath)) {
             require_once($controllerPath);
-            $controllerName = '\\App\\Controller\\'.self::$_controller . 'Controller';
+            $controllerName = '\\App\\Controller\\' . self::$_controller . 'Controller';
             $controller = new $controllerName;
             // Check for action
             if (method_exists($controller, self::$_action)) {
