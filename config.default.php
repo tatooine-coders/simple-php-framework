@@ -13,6 +13,6 @@ return [
         'port' => null,
         'name' => '', // Database name
         'user' => '',
-        'password' => '',
+        'pass' => '',
     ],
 ];

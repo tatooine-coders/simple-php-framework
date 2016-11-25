@@ -14,7 +14,9 @@ require_once('vendor/autoload.php');
 /*
  * Load the configuration
  */
-Config::load();
+Config::load('config.php');
+
+\TC\Model\Database::connect();
 
 /*
  * Find the action and execute it
