@@ -1,2 +1,7 @@
+# PHPStorm files
 /.idea/
+# Netbeans files
+/nbproject/
+
+# Dependencies
 /vendor/
