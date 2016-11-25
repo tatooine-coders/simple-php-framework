@@ -72,7 +72,7 @@ class Database
     /**
      * Connects to the database and create the $_db object
      *
-     * @return void
+     * @return PDO PDO object
      */
     public static function connect()
     {
