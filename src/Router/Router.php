@@ -38,10 +38,10 @@ class Router
     public static function init()
     {
         // Controller
-        if (isset($_GET['c'])) {
+        if (!empty($_GET['c'])) {
             self::$_controller = ucfirst($_GET['c']);
             unset($_GET['c']);
-        } elseif (isset($_POST['c'])) {
+        } elseif (!empty($_POST['c'])) {
             self::$_controller = ucfirst($_POST['c']);
             unset($_POST['c']);
         } else {
@@ -49,10 +49,10 @@ class Router
         }
 
         // Action
-        if (isset($_GET['a'])) {
+        if (!empty($_GET['a'])) {
             self::$_action = $_GET['a'];
             unset($_GET['a']);
-        } elseif (isset($_POST['a'])) {
+        } elseif (!empty($_POST['a'])) {
             self::$_action = $_POST['a'];
             unset($_POST['a']);
         } else {
