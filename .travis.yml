@@ -10,9 +10,6 @@ php:
 matrix:
   fast_finish: true
 
-#  include:
-#    - php: 7.0
-
 before_script:
   - composer install
 
