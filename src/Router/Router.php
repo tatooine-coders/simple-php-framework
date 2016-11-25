@@ -6,7 +6,6 @@
 
 namespace TC\Router;
 use TC\Lib\Config;
-use App\Controller\DefaultController;
 
 class Router
 {
@@ -126,7 +125,7 @@ class Router
 
         if (file_exists($controllerPath)) {
             require_once($controllerPath);
-            $controllerName = self::$_controller . 'Controller';
+            $controllerName = '\\App\\Controller\\'.self::$_controller . 'Controller';
             $controller = new $controllerName;
             // Check for action
             if (method_exists($controller, self::$_action)) {
