@@ -3,7 +3,7 @@
 namespace App\Controller;
 use TC\Controller\Controller;
 
-class defaultController extends Controller
+class DefaultController extends Controller
 {
 
     public function index()
