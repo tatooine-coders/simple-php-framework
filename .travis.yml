@@ -1,0 +1,28 @@
+language: php
+
+dist: trusty
+
+sudo: false
+
+php:
+  - 7.0
+
+matrix:
+  fast_finish: true
+
+  include:
+    - php: 7.0
+      env: PHPCS=1
+
+script:
+  - vendor/bin/phpunit ./src/test/
+  - vendor/bin/phpcs -p --extensions=php --standard=src/codesniffer.xml ./src
+
+notifications:
+  email: false
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/5c9ec345d94dce443cbd
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: never     # options: [always|never|change] default: always
