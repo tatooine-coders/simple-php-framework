@@ -38,8 +38,6 @@ class Router
     /**
      * Initializes the route from passed parameters
      *
-     * @todo We should use filter_input() instead of accessing $_GET/$_POST
-     *
      * @return void
      */
     public static function init()
