@@ -1,5 +1,4 @@
 <?php
-
 namespace TC\Lib;
 
 /**
@@ -44,7 +43,7 @@ class Config
         if (file_exists($file)) {
             self::$_config += require_once($file);
         } else {
-            die('File '.$file.' does not exist');
+            die('File ' . $file . ' does not exist');
         }
     }
 
@@ -62,5 +61,17 @@ class Config
         } else {
             return null;
         }
+    }
+
+    /**
+     * Merges new parameters to the array of current params.
+     *
+     * @param array $newparams New parameters to merge with the current ones
+     *
+     * @return void
+     */
+    public static function merge($newparams)
+    {
+        self::$_config += $newparams;
     }
 }
