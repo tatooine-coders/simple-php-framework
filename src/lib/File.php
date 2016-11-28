@@ -15,4 +15,21 @@ namespace TC\Lib;
 class File
 {
 
+    /**
+     * Creates a line of text indented with a given number of tabs and followed
+     * by a given number of ne lines
+     *
+     * @param integer $tabs    Number of indents for the line
+     * @param string  $content Line content
+     * @param integer $nbNl    Number of new lines after this line
+     *
+     * @return string a line of text
+     */
+    public static function nl($tabs = 0, $content = null, $nbNl = 1)
+    {
+        $tabSize = '    ';
+        $nl = "\n";
+
+        return str_repeat($tabSize, $tabs) . $content . str_repeat($nl, $nbNl);
+    }
 }
