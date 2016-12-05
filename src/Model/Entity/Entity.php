@@ -96,7 +96,7 @@ class Entity
             $statement->execute();
         } elseif ($this->_isModified) {
             $list = join(', ', array_map(function($e) {
-                    return  $e . '= :' . $e;
+                    return $e . '= :' . $e;
                 }, $fieldList));
             $query = "UPDATE " . $this->_tableName . " SET " . $list . " WHERE " . $this->_primaryKey . ' = :' . $this->_primaryKey;
             $statement = DB::c()->prepare($query);
@@ -170,6 +170,18 @@ class Entity
             return $this->_data[$field];
         } else {
             return null;
+        }
+    }
+
+    public function delete()
+    {
+        if (!empty($this->__get($this->_primaryKey))) {
+            $query = "DELETE FROM " . $this->_tableName . " WHERE " . $this->_primaryKey . "=:" . $this->_primaryKey;
+
+            $statement = DB::c()->prepare($query);
+            $statement->bindParam($this->_primaryKey, $this->_data[$this->_primaryKey]);
+            $statement->execute();
+            $this->_data[$this->_primaryKey] = null;
         }
     }
 }
