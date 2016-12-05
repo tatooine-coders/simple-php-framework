@@ -1,17 +1,35 @@
 <?php
+namespace TC\Controller;
+
 /**
- * Main controller class
+ * This file is part of the Simple PHP Framework
+ *
+ * Default controller
+ *
+ * @category Controller
+ * @package  TC
+ * @author   Manuel Tancoigne <m.tancoigne@gmail.com>
+ * @license  http://www.opensource.org/licenses/mit-license.php MIT License
+ * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
-abstract class Controller{
+abstract class Controller
+{
 
-
-
-
-
-    function Before_action(){
-
+    /**
+     * Action that should be executed before the action
+     *
+     * @return void
+     */
+    public function beforeAction()
+    {
     }
-    function After_action(){
 
+    /**
+     * Action that should be executed after the action
+     *
+     * @return void
+     */
+    public function afterAction()
+    {
     }
 }

@@ -1,0 +1,16 @@
+{
+	"name": "tc/framework",
+	"type": "project",
+	"license": "mit",
+	"autoload": {
+		"classmap": [
+			"src",
+			"app"
+		]
+	},
+	"require": {},
+	"require-dev": {
+		"phpunit/phpunit": "5.5.*",
+		"squizlabs/php_codesniffer": "2.*"
+	}
+}

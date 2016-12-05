@@ -1,1 +1,10 @@
+# PHPStorm files
 /.idea/
+# Netbeans files
+/nbproject/
+
+# Dependencies
+/vendor/
+
+# Specific files
+config.php

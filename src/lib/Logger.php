@@ -1,45 +1,60 @@
 <?php
+namespace TC\Lib;
+
+use TC\Lib\Log;
 
 /**
- * Created by PhpStorm.
- * User: Alexandre
- * Date: 23/11/2016
- * Time: 12:56
+ * This file is part of the Simple PHP Framework
+ *
+ * Simple log class used during development
+ *
+ * @category Library
+ * @package  TC
+ * @author   Alexandre Daspe <alexandre.daspe@gmail.com>
+ * @license  http://www.opensource.org/licenses/mit-license.php MIT License
+ * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
 abstract class Logger
 {
-    protected static $_logger = array();
+
+    /**
+     * Array of Log objects
+     * @var array
+     */
+    protected static $_logger = [];
 
     /**
      * Get the list of all logs (Array or Object)
-     * @param bool $isArray
+     *
+     * @param bool $isArray If set to true, returns an array of arrays instead
+     * of an array of Log
+     *
      * @return array
      */
     public static function getLogger($isArray = false)
     {
 
         if ($isArray == true) {
-            $listeLogArray=array();
-            foreach(self::$_logger as $obj_log){
-
+            $listeLogArray = [];
+            foreach (self::$_logger as $obj_log) {
                 array_push($listeLogArray, $obj_log->getAll());
             }
             return $listeLogArray;
-
-        }else{
+        } else {
             return self::$_logger;
         }
     }
 
     /**
      * Add a log in the log list
-     * @param $type
-     * @param $message
+     *
+     * @param string $type    Message type
+     * @param string $message Message
+     *
+     * @return void
      */
     public static function addLog($type, $message)
     {
         self::$_logger[] = new Log($type, $message);
-
     }
-
 }
