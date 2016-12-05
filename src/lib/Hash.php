@@ -1,33 +1,60 @@
 <?php
-
+namespace TC\lib;
+/**
+ * This file is part of the Simple PHP Framework
+ *
+ * Hasher
+ *
+ * @category Library
+ * @package  TC
+ * @author   Alexandre Daspe <alexandre.daspe@gmail.com>
+ * @license  http://www.opensource.org/licenses/mit-license.php MIT License
+ * @link     https://github.com/tatooine-coders/simple-php-framework/
+ */
 abstract class Hash
 {
-
-    public static function get($tableau, $chemin)
+    /**
+     * @param array $array
+     * @param string $path
+     * @return array|null
+     */
+    public static function get(array $array, $path)
     {
-        $cheminHash = explode('.', $chemin);
-        foreach ($cheminHash as $boutChemin) {
-            if (isset($tableau[$boutChemin])) {
-                $tableau = $tableau[$boutChemin];
+        $pathHash = explode('.', $path);
+        foreach ($pathHash as $chunk) {
+            if (isset($array[$chunk])) {
+                $array = $array[$chunk];
             } else {
                 return null;
             }
         }
-        return $tableau;
+        return $array;
     }
 
-    public static function set($tableau, $chemin, $valeur, $overwrite = true)
+    /**
+     * @param array $array
+     * @param string $path
+     * @param string $value
+     * @param bool $overwrite
+     * @return array
+     */
+    public static function set($array, $path, $value, $overwrite = true)
     {
-        $cheminHash = explode('.', $chemin);
-        $newPath = self::createPath($cheminHash, $valeur);
+        $cheminHash = explode('.', $path);
+        $newPath = self::createPath($cheminHash, $value);
         if ($overwrite) {
-            return array_merge($tableau, $newPath);
+            return array_merge($array, $newPath);
         } else {
-            return array_merge_recursive($tableau, $newPath);
+            return array_merge_recursive($array, $newPath);
         }
 
     }
 
+    /**
+     * @param array $path
+     * @param $value
+     * @return array
+     */
     protected static function createPath(Array $path, $value)
     {
         $out = [];
