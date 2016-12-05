@@ -1,5 +1,4 @@
 <?php
-
 namespace TC\Lib;
 
 use PDO;
@@ -16,7 +15,7 @@ use TC\Lib\Config;
  * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
-class Database
+class DB
 {
 
     /**
@@ -93,9 +92,7 @@ class Database
             try {
                 self::$_db = new PDO(
                     "mysql:host=" . self::$_dbHost . ";"
-                    . "dbname=" . self::$_dbName . $portString,
-                    self::$_dbUsername,
-                    self::$_dbUserPassword
+                    . "dbname=" . self::$_dbName . $portString, self::$_dbUsername, self::$_dbUserPassword
                 );
                 self::$_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
@@ -114,5 +111,19 @@ class Database
     public static function disconnect()
     {
         self::$_db = null;
+    }
+
+    /**
+     * Returns the connection object
+     * 
+     * @return PDO PDO object
+     */
+    public static function c()
+    {
+        if (is_null(self::$_db)) {
+            self::connect();
+        }
+
+        return self::$_db;
     }
 }
