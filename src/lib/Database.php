@@ -1,6 +1,6 @@
 <?php
 
-namespace TC\Model;
+namespace TC\Lib;
 
 use PDO;
 use TC\Lib\Config;
