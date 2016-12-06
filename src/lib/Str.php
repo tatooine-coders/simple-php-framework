@@ -139,7 +139,7 @@ class Str
         $str = strtolower($str);
         $key = array_search($str, self::$pluralExceptions);
         if ($key !== false) {
-            return self::$pluralExceptions[$key];
+            return $key;
         } elseif (substr($str, -1) != 's' && !key_exists($str, self::$pluralExceptions)) {
             return $str . 's';
         }
