@@ -64,7 +64,7 @@ class StrTest extends TestCase
      */
     public function testPluralize()
     {
-        $this->assertEquals('person', Str::pluralize('Person'));
+        $this->assertEquals('people', Str::pluralize('Person'));
         $this->assertEquals('people', Str::pluralize('People'));
         $this->assertEquals('cats', Str::pluralize('cat'));
     }
