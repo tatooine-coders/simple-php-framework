@@ -10,6 +10,14 @@ class Str
 {
 
     /**
+     * List of plural=>singular exceptions
+     * @var array 
+     */
+    protected static $pluralExceptions = [
+        'people' => 'person',
+    ];
+
+    /**
      * Camelizes an underscored string
      * 
      * @param string $str String to convert
@@ -56,7 +64,7 @@ class Str
      */
     static public function controllerName($table, $namespace = false)
     {
-        $out = self::camelize($table . '_controller', true);
+        $out = self::camelize(self::pluralize($table) . '_controller', true);
         if ($namespace) {
             $out = 'App\\Controller\\' . $out;
         }
@@ -74,7 +82,7 @@ class Str
      */
     static public function entityName($table, $namespace = false)
     {
-        $out = self::camelize($table . '_entity', true);
+        $out = self::camelize(self::singularize($table) . '_entity', true);
         if ($namespace) {
             $out = 'App\\Model\\Entity\\' . $out;
         }
@@ -93,11 +101,48 @@ class Str
      */
     static public function collectionName($table, $namespace = false)
     {
-        $out = self::camelize($table . '_collection', true);
+        $out = self::camelize(self::pluralize($table) . '_collection', true);
         if ($namespace) {
             $out = 'App\\Model\\Collection\\' . $out;
         }
 
         return $out;
+    }
+
+    /**
+     * Returns the lowercase, singular form of a word
+     * 
+     * @param string $str String to convert
+     * 
+     * @return string
+     */
+    static public function singularize($str)
+    {
+        $str = strtolower($str);
+        if (key_exists($str, self::$pluralExceptions)) {
+            return self::$pluralExceptions[$str];
+        } elseif (strlen($str) > 1) {
+            return rtrim($str, "s");
+        }
+        return $str;
+    }
+
+    /**
+     * Returns the lowercase, plural form of a word
+     * 
+     * @param string $str String to convert
+     * 
+     * @return string
+     */
+    static public function pluralize($str)
+    {
+        $str = strtolower($str);
+        $key = array_search($str, self::$pluralExceptions);
+        if ($key !== false) {
+            return self::$pluralExceptions[$key];
+        } elseif (substr($str, -1) != 's' && !key_exists($str, self::$pluralExceptions)) {
+            return $str . 's';
+        }
+        return $str;
     }
 }

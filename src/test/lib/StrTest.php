@@ -40,9 +40,45 @@ class StrTest extends TestCase
         $this->assertEquals('this_is_another_string', Str::underscore('thisIsAnotherString'));
     }
 
-    public function testCollectionName()
+    /**
+     * Test of the controllerName(), entityName() and collectionName() method
+     * 
+     * @return void
+     */
+    public function testName()
     {
         $this->assertEquals('UsersCollection', Str::collectionName('users'));
         $this->assertEquals('App\\Model\\Collection\\UsersCollection', Str::collectionName('users', true));
+        
+        $this->assertEquals('UserEntity', Str::entityName('users'));
+        $this->assertEquals('App\\Model\\Entity\\UserEntity', Str::entityName('users', true));
+        
+        $this->assertEquals('UsersController', Str::controllerName('users'));
+        $this->assertEquals('App\\Controller\\UsersController', Str::controllerName('users', true));
+    }
+
+    /**
+     * Test of the pluralize() method
+     * 
+     * @return void
+     */
+    public function testPluralize()
+    {
+        $this->assertEquals('person', Str::pluralize('Person'));
+        $this->assertEquals('people', Str::pluralize('People'));
+        $this->assertEquals('cats', Str::pluralize('cat'));
+    }
+
+    /**
+     * Test of the singularize() method
+     * 
+     * @return void
+     */
+    public function testSingularize()
+    {
+        $this->assertEquals('cat', Str::singularize('cats'));
+        $this->assertEquals('cat', Str::singularize('cat'));
+        $this->assertEquals('person', Str::singularize('people'));
+        $this->assertEquals('person', Str::singularize('person'));
     }
 }
