@@ -71,7 +71,7 @@ class DB
     /**
      * Connects to the database and create the $_db object
      *
-     * @return PDO PDO object
+     * @return void
      */
     public static function connect()
     {
@@ -99,8 +99,6 @@ class DB
                 die($e->getMessage());
             }
         }
-
-        return self::$_db;
     }
 
     /**
@@ -125,5 +123,40 @@ class DB
         }
 
         return self::$_db;
+    }
+
+    public static function getTablesNames() {
+        $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='" . Config::get('db')['name'] . "'";
+        $statement = DB::c()->prepare($query);
+        $statement->execute();
+        $statement->setFetchMode(PDO::FETCH_NUM);
+        $tables = [];
+        while (!empty($row = $statement->fetch())) {
+            $tables[] = $row[0];
+        }
+        return $tables;
+    }
+
+    public static function getTablesColumns($tables) {
+        $tab = [];
+        foreach ($tables as $table) {
+            $tab[$table] = self::getTableColumns($table);
+        }
+        return $tab;
+    }
+
+    public static function getTableColumns($table) {
+        $query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS "
+            . "WHERE TABLE_SCHEMA = '" . Config::get('db')['name'] . "' AND TABLE_NAME = '" 
+            . $table . "'";
+        $statement = DB::c()->prepare($query);
+        $statement->execute();
+        $statement->setFetchMode(PDO::FETCH_NUM);
+        $tableColumns = [];
+        while (!empty($row = $statement->fetch())) {
+            $tableColumns[] = $row[0];
+        }
+
+        return $tableColumns;
     }
 }
