@@ -25,6 +25,7 @@ class Entity
      */
     protected $_data = [];
     protected $_fields = [];
+    protected $_foreignKeys = [];
 
     /**
      * Primary key name

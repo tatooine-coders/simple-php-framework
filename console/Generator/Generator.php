@@ -16,5 +16,5 @@ use TC\Lib\Config;
  */
 class Generator
 {
-    public $force = false;
+    public static $force = false;
 }

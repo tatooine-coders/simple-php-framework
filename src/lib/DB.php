@@ -129,10 +129,10 @@ class DB
         $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='" . Config::get('db')['name'] . "'";
         $statement = DB::c()->prepare($query);
         $statement->execute();
-        $statement->setFetchMode(PDO::FETCH_NUM);
+        $statement->setFetchMode(PDO::FETCH_ASSOC);
         $tables = [];
         while (!empty($row = $statement->fetch())) {
-            $tables[] = $row[0];
+            $tables[] = $row['TABLE_NAME'];
         }
         return $tables;
     }
@@ -146,17 +146,44 @@ class DB
     }
 
     public static function getTableColumns($table) {
-        $query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS "
+        $query = "SELECT COLUMN_NAME, COLUMN_KEY, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS "
             . "WHERE TABLE_SCHEMA = '" . Config::get('db')['name'] . "' AND TABLE_NAME = '" 
             . $table . "'";
         $statement = DB::c()->prepare($query);
         $statement->execute();
-        $statement->setFetchMode(PDO::FETCH_NUM);
+        $statement->setFetchMode(PDO::FETCH_ASSOC);
         $tableColumns = [];
         while (!empty($row = $statement->fetch())) {
-            $tableColumns[] = $row[0];
+            if ($row['COLUMN_KEY'] == 'MUL') {
+                $matches = explode("_", $row['COLUMN_NAME'], -1);
+                $field = 'id';
+                $isForeignKey = [
+                    'table' => implode("_", $matches),
+                    'field' => $field
+                ];
+            } else {
+                $isForeignKey = null;
+            }
+            
+            $tableColumns[$row['COLUMN_NAME']] = [
+                'type' => self::fieldType($row['COLUMN_TYPE']), 
+                'isPrimary' => ($row['COLUMN_KEY'] == 'PRI')?true:false,
+                'isForeignKey' => $isForeignKey
+            ];
         }
-
         return $tableColumns;
+    }
+
+    public static function fieldType($type) {
+        $type = strtolower($type);
+        if (preg_match('/(char|text|blob)(\(\d+\))*/', $type)) {
+            return 'string';
+        } else if (preg_match('/int\(\d+\)/', $type)) {
+            return 'integer';
+        } else if (preg_match('/timestamp/', $type)) {
+            return 'DateTime';
+        } else {
+            return $type;
+        } 
     }
 }
