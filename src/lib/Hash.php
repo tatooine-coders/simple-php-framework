@@ -1,5 +1,6 @@
 <?php
-namespace TC\lib;
+namespace TC\Lib;
+
 /**
  * This file is part of the Simple PHP Framework
  *
@@ -14,11 +15,14 @@ namespace TC\lib;
 abstract class Hash
 {
     /**
-     * @param array $array
-     * @param string $path
-     * @return array|null
+     * Returns a value of an array for the given path
+     *
+     * @param array  $array Array in wich to search
+     * @param string $path  Path like 'some.key.to.get'
+     *
+     * @return mixed|null Returns null if key does not exists
      */
-    public static function get(array $array, $path)
+    public static function getValue(array $array, $path)
     {
         $pathHash = explode('.', $path);
         foreach ($pathHash as $chunk) {
@@ -32,13 +36,17 @@ abstract class Hash
     }
 
     /**
-     * @param array $array
-     * @param string $path
-     * @param string $value
-     * @param bool $overwrite
-     * @return array
+     * Sets a value in the given array
+     *
+     * @param array  $array     Target array
+     * @param string $path      Path like 'some.key.to.set'
+     * @param mixed  $value     Value to set
+     * @param bool   $overwrite Flag to averwrite existing content or to append new values instead
+     *                          values instead
+     *
+     * @return array The new array
      */
-    public static function set($array, $path, $value, $overwrite = true)
+    public static function setValue($array, $path, $value, $overwrite = true)
     {
         $cheminHash = explode('.', $path);
         $newPath = self::createPath($cheminHash, $value);
@@ -47,15 +55,17 @@ abstract class Hash
         } else {
             return array_merge_recursive($array, $newPath);
         }
-
     }
 
     /**
-     * @param array $path
-     * @param $value
-     * @return array
+     * Creates a path of multidimensionnal arrays and assign a value to it
+     *
+     * @param array $path  Array on wich to perform the
+     * @param mixed $value Value to assign
+     *
+     * @return array The new array
      */
-    protected static function createPath(Array $path, $value)
+    protected static function createPath(array $path, $value)
     {
         $out = [];
         if (count($path) === 0) {
