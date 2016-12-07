@@ -5,6 +5,7 @@ use TC\Lib\DB;
 use PDO;
 use IteratorAggregate;
 use ArrayIterator;
+use TC\Lib\Str;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -31,7 +32,7 @@ class Collection implements IteratorAggregate
 
         $statement->setFetchMode(PDO::FETCH_OBJ);
         // Entity name
-        $entity = 'App\\Model\\Entity\\' . ucfirst($this->_table) . 'Entity';
+        $entity = Str::entityName($this->_table, true);
 
         while (!empty($row = $statement->fetch())) {
             $this->_data[] = new $entity($row);
