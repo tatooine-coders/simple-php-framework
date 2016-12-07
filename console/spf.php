@@ -1,6 +1,7 @@
 <?php
 use TC\Lib\DB;
 use TC\Lib\Config;
+use TC\Lib\File;
 
 require_once 'vendor/autoload.php';
 
@@ -10,10 +11,6 @@ Config::load('config.php');
 DB::connect();
 $tables = DB::getTablesNames();
 $tables = DB::getTablesColumns($tables);
-$modelsGenerator = new ModelsGenerator();
-$modelsGenerator->force = (isset($argv[1]) && $argv[1] == 'force');
-$modelsGenerator->setTables($tables);
-$modelsGenerator->generateEntities();
-$modelsGenerator->generateCollections();
-
-?>
+ModelsGenerator::$force = (isset($argv[1]) && $argv[1] == 'force');
+ModelsGenerator::generateEntities($tables);
+ModelsGenerator::generateCollections($tables);
