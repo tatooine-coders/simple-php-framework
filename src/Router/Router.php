@@ -2,6 +2,7 @@
 namespace TC\Router;
 
 use TC\Lib\Config;
+use TC\lib\Hash;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -42,26 +43,27 @@ class Router
      */
     public static function init()
     {
-        // Controller
-        if (!empty($_GET['c'])) {
-            self::$_controller = ucfirst($_GET['c']);
-            unset($_GET['c']);
-        } elseif (!empty($_POST['c'])) {
-            self::$_controller = ucfirst($_POST['c']);
-            unset($_POST['c']);
-        } else {
-            self::$_controller = Config::get('defaultRoute')['controller'];
+        $route = explode('?', $_SERVER['REQUEST_URI']);
+        $tmpPath = explode('/', $route[0]);
+        $routePath = [];
+        // Cleaning path
+        foreach ($tmpPath as $pathElement) {
+            if ($pathElement != '') {
+                $routePath[] = $pathElement;
+            }
         }
 
-        // Action
-        if (!empty($_GET['a'])) {
-            self::$_action = $_GET['a'];
-            unset($_GET['a']);
-        } elseif (!empty($_POST['a'])) {
-            self::$_action = $_POST['a'];
-            unset($_POST['a']);
+        // Controller
+        if (isset($routePath[0]) && $routePath[0] !== '') {
+            self::$_controller = $routePath[0];
+            if (isset($routePath[1])) {
+                self::$_action = $routePath[1];
+            } else {
+                self::$_action = Config::get('defaultRoute.action');
+            }
         } else {
-            self::$_action = Config::get('defaultRoute')['action'];
+            self::$_controller = Config::get('defaultRoute.controller');
+            self::$_action = Config::get('defaultRoute.action');
         }
 
         // Parameters
