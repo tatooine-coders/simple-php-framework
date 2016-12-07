@@ -91,8 +91,9 @@ class DB
         if (null == self::$_db) {
             try {
                 self::$_db = new PDO(
-                    "mysql:host=" . self::$_dbHost . ";"
-                    . "dbname=" . self::$_dbName . $portString, self::$_dbUsername, self::$_dbUserPassword
+                    "mysql:host=" . self::$_dbHost . ";dbname=" . self::$_dbName . $portString,
+                    self::$_dbUsername,
+                    self::$_dbUserPassword
                 );
                 self::$_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
@@ -113,7 +114,7 @@ class DB
 
     /**
      * Returns the connection object
-     * 
+     *
      * @return PDO PDO object
      */
     public static function c()
@@ -125,8 +126,15 @@ class DB
         return self::$_db;
     }
 
-    public static function getTablesNames() {
-        $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='" . Config::get('db')['name'] . "'";
+    /**
+     * Returns the list of tables in database
+     *
+     * @return array
+     */
+    public static function getTablesNames()
+    {
+        $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='"
+            . Config::get('db.name') . "'";
         $statement = DB::c()->prepare($query);
         $statement->execute();
         $statement->setFetchMode(PDO::FETCH_NUM);
@@ -137,7 +145,15 @@ class DB
         return $tables;
     }
 
-    public static function getTablesColumns($tables) {
+    /**
+     * Returns a list of fields for every table name given in input
+     *
+     * @param array $tables List of table names
+     *
+     * @return array
+     */
+    public static function getTablesColumns($tables)
+    {
         $tab = [];
         foreach ($tables as $table) {
             $tab[$table] = self::getTableColumns($table);
@@ -145,9 +161,17 @@ class DB
         return $tab;
     }
 
-    public static function getTableColumns($table) {
+    /**
+     * Returns the columns definition for a given table
+     *
+     * @param string $table Table name
+     *
+     * @return array
+     */
+    public static function getTableColumns($table)
+    {
         $query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS "
-            . "WHERE TABLE_SCHEMA = '" . Config::get('db')['name'] . "' AND TABLE_NAME = '" 
+            . "WHERE TABLE_SCHEMA = '" . Config::get('db')['name'] . "' AND TABLE_NAME = '"
             . $table . "'";
         $statement = DB::c()->prepare($query);
         $statement->execute();
