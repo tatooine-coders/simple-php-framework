@@ -184,4 +184,14 @@ class Entity
             $this->_data[$this->_primaryKey] = null;
         }
     }
+
+    /**
+     * Returns the primary key name
+     * 
+     * @return string
+     */
+    public function getPrimary()
+    {
+        return $this->_primaryKey;
+    }
 }
