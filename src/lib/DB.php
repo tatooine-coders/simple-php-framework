@@ -168,9 +168,10 @@ class DB
      *
      * @return array
      */
-    public static function getTableColumns($table) {
+    public static function getTableColumns($table)
+    {
         $query = "SELECT COLUMN_NAME, COLUMN_KEY, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS "
-            . "WHERE TABLE_SCHEMA = '" . Config::get('db')['name'] . "' AND TABLE_NAME = '" 
+            . "WHERE TABLE_SCHEMA = '" . Config::get('db')['name'] . "' AND TABLE_NAME = '"
             . $table . "'";
         $statement = DB::c()->prepare($query);
         $statement->execute();
@@ -187,33 +188,34 @@ class DB
             } else {
                 $isForeignKey = null;
             }
-            
+
             $tableColumns[$row['COLUMN_NAME']] = [
-                'type' => self::fieldType($row['COLUMN_TYPE']), 
+                'type' => self::fieldType($row['COLUMN_TYPE']),
                 'isPrimary' => ($row['COLUMN_KEY'] == 'PRI')?true:false,
                 'isForeignKey' => $isForeignKey
             ];
         }
         return $tableColumns;
     }
-    
+
     /**
      * Returns a PHP type for a given Mysql one
-     * 
+     *
      * @param string $type Type to convert
-     * 
+     *
      * @return string Converted string
      */
-    public static function fieldType($type) {
+    public static function fieldType($type)
+    {
         $type = strtolower($type);
         if (preg_match('/(char|text|blob)(\(\d+\))*/', $type)) {
             return 'string';
-        } else if (preg_match('/int\(\d+\)/', $type)) {
+        } elseif (preg_match('/int\(\d+\)/', $type)) {
             return 'integer';
-        } else if (preg_match('/timestamp/', $type)) {
+        } elseif (preg_match('/timestamp/', $type)) {
             return 'DateTime';
         } else {
             return $type;
-        } 
+        }
     }
 }

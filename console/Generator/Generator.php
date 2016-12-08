@@ -19,15 +19,24 @@ use TC\Lib\Config;
 class Generator
 {
 
+    /**
+     * List of flags like --force
+     * @var array
+     */
     protected static $_flags = [];
+
+    /**
+     * List of parameters
+     * @var array
+     */
     protected static $_parameters = [];
-    
+
     /**
      * Initializes the class parameters and flags
-     * 
+     *
      * @param array $parameters List of parameters
-     * @param array $flags List of flags
-     * 
+     * @param array $flags      List of flags
+     *
      * @return void
      */
     public static function init($parameters, $flags)

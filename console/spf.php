@@ -72,10 +72,9 @@ if (!is_null($class) && !is_null($action)) {
             echo Console::help();
             die();
     }
-    
+
     $controllerName::init($params, $flags);
     $controllerName::generate($target);
-    
 } else {
     echo Console::error('I don\'t know what to do');
     echo Console::help();

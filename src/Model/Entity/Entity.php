@@ -23,7 +23,17 @@ class Entity
      * @var array
      */
     protected $_data = [];
+
+    /**
+     * Fields list
+     * @var array
+     */
     protected $_fields = [];
+
+    /**
+     * List of foreign keys with their table and target fields
+     * @var array
+     */
     protected $_foreignKeys = [];
 
     /**
@@ -40,15 +50,15 @@ class Entity
 
     /**
      * State of the current entity
-     * @var boolean 
+     * @var boolean
      */
     protected $_isModified = false;
 
     /**
      * Fetches an entity in DB and populates $fields
-     * 
+     *
      * @param type $id Id of the entity to get
-     * 
+     *
      * @return void
      */
     public function fetch($id)
@@ -83,9 +93,15 @@ class Entity
 
             $fields = join(',', $fieldList);
 
-            $attributes = join(',', array_map(function($e) {
-                    return ':' . $e;
-                }, $fieldList));
+            $attributes = join(
+                ',',
+                array_map(
+                    function ($e) {
+                        return ':' . $e;
+                    },
+                    $fieldList
+                )
+            );
             $query = "INSERT INTO " . $this->_tableName . ""
                 . " (" . $fields . ") VALUES (" . $attributes . ")";
             $statement = DB::c()->prepare($query);
@@ -96,10 +112,18 @@ class Entity
 
             $statement->execute();
         } elseif ($this->_isModified) {
-            $list = join(', ', array_map(function($e) {
-                    return $e . '= :' . $e;
-                }, $fieldList));
-            $query = "UPDATE " . $this->_tableName . " SET " . $list . " WHERE " . $this->_primaryKey . ' = :' . $this->_primaryKey;
+            $list = join(
+                ', ',
+                array_map(
+                    function ($e) {
+                        return $e . '= :' . $e;
+                    },
+                    $fieldList
+                )
+            );
+            $query = "UPDATE " . $this->_tableName
+                . " SET " . $list
+                . " WHERE " . $this->_primaryKey . ' = :' . $this->_primaryKey;
             $statement = DB::c()->prepare($query);
             foreach ($fieldList as $field) {
                 $statement->bindParam($field, $this->_data[$field]);
@@ -109,6 +133,11 @@ class Entity
         }
     }
 
+    /**
+     * Returns all the data from $_data
+     *
+     * @return array
+     */
     public function getData()
     {
         return $this->_data;
@@ -127,7 +156,8 @@ class Entity
     /**
      * Populates the array of data
      *
-     * @param type $data
+     * @param array   $data    Multidimensionnal array of key=>value
+     * @param boolean $initial If set to true, the entity will be considered as clean
      *
      * @return void
      */
@@ -145,9 +175,9 @@ class Entity
     /**
      * Generic setter
      *
-     * @param string $field
-     * @param mixed  $value
-     * 
+     * @param string $field Target field
+     * @param mixed  $value New value
+     *
      * @return void
      */
     public function __set($field, $value)
@@ -176,6 +206,11 @@ class Entity
         }
     }
 
+    /**
+     * Deletes the current entity from DB
+     *
+     * @return void
+     */
     public function delete()
     {
         if (!empty($this->__get($this->_primaryKey))) {
@@ -190,7 +225,7 @@ class Entity
 
     /**
      * Returns the primary key name
-     * 
+     *
      * @return string
      */
     public function getPrimary()

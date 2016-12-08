@@ -21,9 +21,23 @@ use TC\Lib\Str;
 class Collection implements IteratorAggregate
 {
 
+    /**
+     * Table name
+     * @var string
+     */
     protected $_table = null;
+
+    /**
+     * List of entities
+     * @var array
+     */
     protected $_data = [];
 
+    /**
+     * Fetches all the entities in db
+     *
+     * @return void
+     */
     public function fetchAll()
     {
         $query = 'SELECT * FROM ' . $this->_table;
@@ -39,18 +53,31 @@ class Collection implements IteratorAggregate
         };
     }
 
+    /**
+     * Makes the class iterable with while/foreach
+     *
+     * @return ArrayIterator
+     */
     public function getIterator()
     {
         return new ArrayIterator($this->_data);
     }
 
+    /**
+     * Saves all the loaded entities
+     *
+     * @return void
+     */
     public function saveAll()
     {
-        
     }
 
+    /**
+     * Deletes all the loaded entities
+     *
+     * @return void
+     */
     public function deleteAll()
     {
-        
     }
 }

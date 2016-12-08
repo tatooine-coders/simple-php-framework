@@ -11,8 +11,6 @@ use TC\Lib\DB;
  *
  * Model generator
  *
- * This should be broken in multiple files/classes to be cleaner
- *
  * @category Generators
  * @package  TC
  * @author   Hamid Kellali <hamid.kellali@gmail.com>
@@ -37,11 +35,18 @@ abstract class ModelsGenerator extends Generator
      */
     protected static $_parameters = [];
 
+    /**
+     * Returns a suffix string to set in class Docblock declaration
+     *
+     * @param string $value Type of column
+     *
+     * @return string
+     */
     protected static function getSuffix($value)
     {
         if ($value['isPrimary']) {
             $suffix = " Primary key";
-        } else if ($value['isForeignKey']) {
+        } elseif ($value['isForeignKey']) {
             $suffix = " Foreign key from " . Str::pluralize($value['isForeignKey']['table']);
         } else {
             $suffix = null;
@@ -51,7 +56,7 @@ abstract class ModelsGenerator extends Generator
 
     /**
      * Returns the list of tables to generate with their columns
-     * 
+     *
      * @return array
      */
     protected static function getTables()
@@ -65,9 +70,9 @@ abstract class ModelsGenerator extends Generator
 
     /**
      * Generates entities classes for given table list
-     * 
+     *
      * @param array $tables List of table names
-     * 
+     *
      * @return void
      */
     protected static function entities($tables = [])
@@ -81,9 +86,9 @@ abstract class ModelsGenerator extends Generator
 
     /**
      * Generates collections classes for given table list
-     * 
+     *
      * @param array $tables List of table names
-     * 
+     *
      * @return void
      */
     protected static function collections($tables = [])
@@ -97,21 +102,20 @@ abstract class ModelsGenerator extends Generator
 
     /**
      * Generates entity class for a given table
-     * 
-     * @param string $table Table name
-     * @param array $attributes Array of attributes
-     * 
+     *
+     * @param string $table      Table name
+     * @param array  $attributes Array of attributes
+     *
      * @return void
      */
     protected static function entity($table, $attributes)
     {
-        echo \TC\Lib\Console::info(File::nl(0, '  > Generating '.Str::entityName($table)));
+        echo \TC\Lib\Console::info(File::nl(0, '  > Generating ' . Str::entityName($table)));
 
         $stringList = null;
         $fieldsList = [];
         $paramsListArray = [];
         foreach ($attributes as $attribute => $value) {
-
             $paramsListArray['names'][] = $attribute;
             $paramsListArray['suffixes'][] = self::getSuffix($value);
             $paramsListArray['types'][] = $value['type'];
@@ -145,7 +149,9 @@ abstract class ModelsGenerator extends Generator
             $current .= File::nl(1, " * ", 1);
             foreach ($attributes as $attribute => $value) {
                 if ($value['isForeignKey'] != null) {
-                    $current .= File::nl(1, " * @property " . Str::entityName(Str::singularize($value['isForeignKey']['table']), true) . " $" . ucfirst($value['isForeignKey']['table']), 1);
+                    $stringToAdd = Str::entityName(Str::singularize($value['isForeignKey']['table']), true)
+                        . " $" . ucfirst($value['isForeignKey']['table']);
+                    $current .= File::nl(1, " * @property " . $stringToAdd, 1);
                 }
             }
             $current .= File::nl(1, " * ", 1)
@@ -210,22 +216,24 @@ abstract class ModelsGenerator extends Generator
             $current .= "}\n";
             file_put_contents($file, $current);
         } else {
-            echo \TC\Lib\Console::warning(File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")'));
+            echo \TC\Lib\Console::warning(
+                File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")')
+            );
         }
     }
 
     /**
      * Generates collection class for a given table
-     * 
-     * @param string $table Table name
-     * @param array $attributes Array of attributes
-     * 
+     *
+     * @param string $table      Table name
+     * @param array  $attributes Array of attributes
+     *
      * @return void
      */
     protected static function collection($table, $attributes)
     {
-        echo \TC\Lib\Console::info(File::nl(0, '  > Generating '.Str::collectionName($table)));
-        
+        echo \TC\Lib\Console::info(File::nl(0, '  > Generating ' . Str::collectionName($table)));
+
         $folder = 'app/Model/Collection/';
         if (!file_exists($folder)) {
             mkdir($folder);
@@ -263,16 +271,18 @@ abstract class ModelsGenerator extends Generator
             $current .= "}\n";
             file_put_contents($file, $current);
         } else {
-            echo \TC\Lib\Console::warning(File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")'));
+            echo \TC\Lib\Console::warning(
+                File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")')
+            );
         }
     }
 
     /**
      * Main method to be called by spf.php. This method will call the different
      * generator using the different actions.
-     * 
+     *
      * @param string $action Action to perform
-     * 
+     *
      * @return void
      */
     public static function generate($action = null)

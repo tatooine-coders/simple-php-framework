@@ -2,9 +2,15 @@
 namespace TC\Lib;
 
 /**
- * Description of Str
+ * This file is part of the Simple PHP Framework
  *
- * @author mtancoigne
+ * String utilities
+ *
+ * @category Lib
+ * @package  TC
+ * @author   Manuel Tancoigne <m.tancoigne@gmail.com>
+ * @license  http://www.opensource.org/licenses/mit-license.php MIT License
+ * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
 class Str
 {

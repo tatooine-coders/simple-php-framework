@@ -33,13 +33,25 @@ class File
         return str_repeat($tabSize, $tabs) . $content . str_repeat($nl, $nbNl);
     }
 
-    public static function equalizeLength(Array $strings, Array $suffixes = [], $addSpace = false) {
+    /**
+     * Returns a list of $strings suffixed with $suffixes and whitespaces to align
+     * them
+     *
+     * @param array   $strings  List of strings
+     * @param array   $suffixes List of suffixes strings
+     * @param boolean $addSpace If set to true, a space will be added after the
+     *                          longest string
+     *
+     * @return array
+     */
+    public static function equalizeLength(array $strings, array $suffixes = [], $addSpace = false)
+    {
         $maxLength = max(array_map('strlen', $strings));
 
         foreach ($strings as $index => $string) {
-            if(isset($suffixes[$index]) ||$addSpace) {
+            if (isset($suffixes[$index]) || $addSpace) {
                 $strings[$index] .= str_repeat(' ', $maxLength-strlen($string)+($addSpace?1:0));
-                if(isset($suffixes[$index])) {
+                if (isset($suffixes[$index])) {
                     $strings[$index] .= $suffixes[$index];
                 }
             }

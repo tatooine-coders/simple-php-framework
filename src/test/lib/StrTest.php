@@ -42,24 +42,24 @@ class StrTest extends TestCase
 
     /**
      * Test of the controllerName(), entityName() and collectionName() method
-     * 
+     *
      * @return void
      */
     public function testName()
     {
         $this->assertEquals('UsersCollection', Str::collectionName('users'));
         $this->assertEquals('App\\Model\\Collection\\UsersCollection', Str::collectionName('users', true));
-        
+
         $this->assertEquals('UserEntity', Str::entityName('users'));
         $this->assertEquals('App\\Model\\Entity\\UserEntity', Str::entityName('users', true));
-        
+
         $this->assertEquals('UsersController', Str::controllerName('users'));
         $this->assertEquals('App\\Controller\\UsersController', Str::controllerName('users', true));
     }
 
     /**
      * Test of the pluralize() method
-     * 
+     *
      * @return void
      */
     public function testPluralize()
@@ -71,7 +71,7 @@ class StrTest extends TestCase
 
     /**
      * Test of the singularize() method
-     * 
+     *
      * @return void
      */
     public function testSingularize()
