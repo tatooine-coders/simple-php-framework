@@ -5,6 +5,7 @@
  */
 use TC\Lib\Config;
 use TC\Router\Router;
+use TC\Lib\DB;
 
 /*
  * Autoloader
@@ -16,11 +17,11 @@ require_once('vendor/autoload.php');
  */
 Config::load('config.php');
 
-\TC\Model\Database::connect();
+DB::connect();
 
 /*
  * Find the action and execute it
  */
 Router::init();
-var_dump(Router::getRoute());
+// var_dump(Router::getRoute());
 Router::executeAction();

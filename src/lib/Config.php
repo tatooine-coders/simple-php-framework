@@ -1,6 +1,8 @@
 <?php
 namespace TC\Lib;
 
+use TC\Lib\Hash;
+
 /**
  * This file is part of the Simple PHP Framework
  *
@@ -12,7 +14,7 @@ namespace TC\Lib;
  * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
-class Config
+class Config extends Hash
 {
 
     /**
@@ -56,11 +58,19 @@ class Config
      */
     public static function get($param)
     {
-        if (isset(self::$_config[$param])) {
-            return self::$_config[$param];
-        } else {
-            return null;
-        }
+        return parent::getValue(self::$_config, $param);
+    }
+
+    /**
+     * Overwrites a configuration value
+     *
+     * @param string $path  Path of keys like 'some.key.to.set'
+     * @param mixed  $value New value to assign
+     * @return void
+     */
+    public static function set($path, $value)
+    {
+        return parent::setValue(self::$_config, $path, $value);
     }
 
     /**
