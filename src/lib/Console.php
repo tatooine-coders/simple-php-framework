@@ -112,7 +112,7 @@ class Console
     {
         // Coding standards are voluntarily ignored on the help message as lines
         // are often longer than 120 chars
-        // 
+        //
         // @codingStandardsIgnoreStart
         return File::nl(0, 'Help:')
             . File::nl(0, '=====')
