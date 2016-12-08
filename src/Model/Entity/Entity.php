@@ -20,8 +20,7 @@ class Entity
 
     /**
      * Fields data
-     *
-     * @var mixed
+     * @var array
      */
     protected $_data = [];
     protected $_fields = [];
@@ -41,15 +40,16 @@ class Entity
 
     /**
      * State of the current entity
-     * 
      * @var boolean 
      */
     protected $_isModified = false;
 
     /**
      * Fetches an entity in DB and populates $fields
-     *
+     * 
      * @param type $id Id of the entity to get
+     * 
+     * @return void
      */
     public function fetch($id)
     {
@@ -147,6 +147,8 @@ class Entity
      *
      * @param string $field
      * @param mixed  $value
+     * 
+     * @return void
      */
     public function __set($field, $value)
     {

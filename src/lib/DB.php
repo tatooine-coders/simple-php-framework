@@ -196,7 +196,14 @@ class DB
         }
         return $tableColumns;
     }
-
+    
+    /**
+     * Returns a PHP type for a given Mysql one
+     * 
+     * @param string $type Type to convert
+     * 
+     * @return string Converted string
+     */
     public static function fieldType($type) {
         $type = strtolower($type);
         if (preg_match('/(char|text|blob)(\(\d+\))*/', $type)) {
