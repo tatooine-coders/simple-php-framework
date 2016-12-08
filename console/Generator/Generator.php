@@ -1,6 +1,8 @@
 <?php
 namespace TC\Console\Generator;
+
 use TC\Lib\Config;
+
 /**
  * This file is part of the Simple PHP Framework
  *
@@ -16,5 +18,28 @@ use TC\Lib\Config;
  */
 class Generator
 {
-    public static $force = false;
+
+    protected static $_flags = [];
+    protected static $_parameters = [];
+    
+    /**
+     * Initializes the class parameters and flags
+     * 
+     * @param array $parameters List of parameters
+     * @param array $flags List of flags
+     * 
+     * @return void
+     */
+    public static function init($parameters, $flags)
+    {
+        foreach ($flags as $flag) {
+            if (key_exists($flag, static::$_flags)) {
+                static::$_flags[$flag] = !static::$_flags[$flag];
+            } else {
+                echo "Note: Unknown flag $flag. This will be ignored\n";
+            }
+        }
+
+        static::$_parameters = $parameters;
+    }
 }
