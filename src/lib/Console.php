@@ -61,12 +61,10 @@ class Console
      */
     public static function greeter()
     {
-        return self::color(
-            File::nl(0, 'Welcome to the SPF console')
-                . File::nl(0, '==========================')
-            . File::nl(0, '~ 2016 ~ Tatooine Coders ~', 2),
-            'green'
-        );
+        $out = File::nl(0, 'Welcome to the SPF console')
+            . File::nl(0, '==========================')
+            . File::nl(0, '~ 2016 ~ Tatooine Coders ~', 2);
+        return self::color($out, 'green');
     }
 
     /**
@@ -112,12 +110,23 @@ class Console
      */
     public static function help()
     {
+        // Coding standards are voluntarily ignored on the help message as lines
+        // are often longer than 120 chars
+        // 
+        // @codingStandardsIgnoreStart
         return File::nl(0, 'Help:')
             . File::nl(0, '=====')
-            . File::nl(1, '- generate:')
-            . File::nl(2, 'models [all|collections|entities] [model1, model2,...] --force --all')
+            //--- Begin Generators
+            . File::nl(1, self::color('- generate:', 'cyan'))
+            //Models
+            . File::nl(2, self::color('models [all|collections|entities] [table1, table2,...] --force --all', 'light_cyan'))
             . File::nl(3, 'Generates collections and entities')
-            . File::nl(1, '- help')
+            // Controllers
+            . File::nl(2, self::color('controllers [model1, model2,...] --force --all', 'light_cyan'))
+            . File::nl(3, 'Generates controllers')
+            //--- Begin Help
+            . File::nl(1, self::color('- help', 'cyan'))
             . File::nl(3, 'Shows this error message');
+        // @codingStandardsIgnoreEnd
     }
 }
