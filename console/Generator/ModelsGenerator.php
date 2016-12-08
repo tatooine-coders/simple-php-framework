@@ -1,10 +1,11 @@
 <?php
 namespace TC\Console\Generator;
 
+use TC\Console\Generator\Generator;
+use TC\Lib\Console;
+use TC\Lib\DB;
 use TC\Lib\File;
 use TC\Lib\Str;
-use TC\Console\Generator\Generator;
-use TC\Lib\DB;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -110,7 +111,7 @@ abstract class ModelsGenerator extends Generator
      */
     protected static function entity($table, $attributes)
     {
-        echo \TC\Lib\Console::info(File::nl(0, '  > Generating ' . Str::entityName($table)));
+        echo Console::info(File::nl(0, '  > Generating ' . Str::entityName($table)));
 
         $stringList = null;
         $fieldsList = [];
@@ -216,7 +217,7 @@ abstract class ModelsGenerator extends Generator
             $current .= "}\n";
             file_put_contents($file, $current);
         } else {
-            echo \TC\Lib\Console::warning(
+            echo Console::warning(
                 File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")')
             );
         }
@@ -232,7 +233,7 @@ abstract class ModelsGenerator extends Generator
      */
     protected static function collection($table, $attributes)
     {
-        echo \TC\Lib\Console::info(File::nl(0, '  > Generating ' . Str::collectionName($table)));
+        echo Console::info(File::nl(0, '  > Generating ' . Str::collectionName($table)));
 
         $folder = 'app/Model/Collection/';
         if (!file_exists($folder)) {
@@ -271,7 +272,7 @@ abstract class ModelsGenerator extends Generator
             $current .= "}\n";
             file_put_contents($file, $current);
         } else {
-            echo \TC\Lib\Console::warning(
+            echo Console::warning(
                 File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")')
             );
         }
