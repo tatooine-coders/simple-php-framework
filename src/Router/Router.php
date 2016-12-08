@@ -2,7 +2,8 @@
 namespace TC\Router;
 
 use TC\Lib\Config;
-use TC\lib\Hash;
+use TC\Lib\Hash;
+use TC\Lib\Str;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -43,7 +44,7 @@ class Router
      */
     public static function init()
     {
-        $route = explode('?', $_SERVER['REQUEST_URI']);
+        $route = explode('?', str_replace(dirname($_SERVER['SCRIPT_NAME']), '', $_SERVER['REQUEST_URI']));
         $tmpPath = explode('/', $route[0]);
         $routePath = [];
         // Cleaning path
@@ -128,7 +129,7 @@ class Router
     public static function executeAction()
     {
         // Check for controller
-        $controllerPath = 'app/Controller/' . self::$_controller . 'Controller.php';
+        $controllerPath = 'app/Controller/' . Str::controllerName(self::$_controller).'.php';
 
         if (file_exists($controllerPath)) {
             require_once($controllerPath);
