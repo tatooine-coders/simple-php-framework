@@ -51,4 +51,14 @@ class Generator
 
         static::$_parameters = $parameters;
     }
+
+    /**
+     * Executes the `composer dumpautoload` script
+     * 
+     * @return void
+     */
+    public static function dumpautoload()
+    {
+        exec('exec composer dumpautoload -d ' . SPF_BASE);
+    }
 }
