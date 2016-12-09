@@ -68,7 +68,7 @@ if (!is_null($class) && !is_null($action)) {
             $controllerName = 'TC\\Console\\Generator\\' . Str::camelize($action . '_generator', true);
             break;
         default:
-            echo Console::error('I don\'t know what to do');
+            echo Console::error(File::nl(0, 'I don\'t know what to do'));
             echo Console::help();
             die();
     }
@@ -76,7 +76,7 @@ if (!is_null($class) && !is_null($action)) {
     $controllerName::init($params, $flags);
     $controllerName::generate($target);
 } else {
-    echo Console::error('I don\'t know what to do');
+    echo Console::error(File::nl(0, 'I don\'t know what to do'));
     echo Console::help();
     die();
 }

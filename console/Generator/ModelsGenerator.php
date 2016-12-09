@@ -296,7 +296,7 @@ abstract class ModelsGenerator extends Generator
             case 'collections':
                 self::collections();
                 break;
-            case 'entity':
+            case 'entities':
                 self::entities();
                 break;
             default:
