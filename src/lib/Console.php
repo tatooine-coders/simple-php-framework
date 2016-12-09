@@ -124,6 +124,9 @@ class Console
             // Controllers
             . File::nl(2, self::color('controllers [model1, model2,...] --force --all', 'light_cyan'))
             . File::nl(3, 'Generates controllers')
+            // All
+            . File::nl(2, self::color('all [model1, model2,...] --force --all', 'light_cyan'))
+            . File::nl(3, 'Generates entities, collections and controllers')
             //--- Begin Help
             . File::nl(1, self::color('- help', 'cyan'))
             . File::nl(3, 'Shows this error message');
