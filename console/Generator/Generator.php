@@ -32,6 +32,14 @@ class Generator
     protected static $_parameters = [];
 
     /**
+     * List of flags passed to the class, so they can be passed to other ones
+     * the same way they were defined.
+     * 
+     * @var array
+     */
+    protected static $_passedFlags = [];
+
+    /**
      * Initializes the class parameters and flags
      *
      * @param array $parameters List of parameters
@@ -41,7 +49,9 @@ class Generator
      */
     public static function init($parameters, $flags)
     {
-        foreach ($flags as $flag) {
+        static::$_passedFlags = $flags;
+        
+        foreach (self::$_passedFlags as $flag) {
             if (key_exists($flag, static::$_flags)) {
                 static::$_flags[$flag] = !static::$_flags[$flag];
             } else {
