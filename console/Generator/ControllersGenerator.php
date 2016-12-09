@@ -230,13 +230,17 @@ abstract class ControllersGenerator extends Generator
         } elseif (!empty($action)) {
             // Add $action to the list of parameters
             self::$_parameters[] = $action;
+        }
+
+        // Generate the controllers
+        if (count(self::$_parameters) > 0 || self::$_flags['force']) {
+            self::controllers();
         } else {
             echo File::nl(0, Console::error('Nothing to do'));
             echo Console::help();
             die();
         }
-
-        // Generate the controllers
-        self::controllers();
+        
+        self::dumpautoload();
     }
 }

@@ -292,12 +292,15 @@ abstract class ModelsGenerator extends Generator
             case 'all':
                 self::collections();
                 self::entities();
+                self::dumpautoload();
                 break;
             case 'collections':
                 self::collections();
+                self::dumpautoload();
                 break;
             case 'entities':
                 self::entities();
+                self::dumpautoload();
                 break;
             default:
                 die('What do you want to do ?');
