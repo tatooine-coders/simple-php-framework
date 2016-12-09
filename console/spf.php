@@ -48,6 +48,15 @@ $flags = [];
  */
 $params = [];
 
+/**
+ * Base dir
+ * @const String SPF_BASE
+ */
+define('SPF_BASE', dirname(dirname(__FILE__).'../'));
+
+/*
+ * Welcome text
+ */
 echo Console::greeter();
 
 /*
