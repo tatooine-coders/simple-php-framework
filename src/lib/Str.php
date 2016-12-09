@@ -151,4 +151,22 @@ class Str
         }
         return $str;
     }
+
+    /**
+     * Returns a pretty string to be displayed in views: underscores are replaced
+     * by spaces
+     * 
+     * @param string $str Underscored string
+     * @param bool $ucfirst Wether or not to capitalize the first letter
+     * 
+     * @return string
+     */
+    public static function prettify(string $str, bool $ucfirst = false)
+    {
+        $out = strtolower(str_replace('_', ' ', $str));
+        if ($ucfirst) {
+            $out = ucfirst($out);
+        }
+        return $out;
+    }
 }
