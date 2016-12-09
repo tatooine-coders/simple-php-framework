@@ -44,7 +44,9 @@ class Router
      */
     public static function init()
     {
-        $route = explode('?', str_replace(dirname($_SERVER['SCRIPT_NAME']), '', $_SERVER['REQUEST_URI']));
+        $basePath = preg_quote(dirname($_SERVER['SCRIPT_NAME']));
+
+        $route = explode('?', preg_replace("@$basePath@", '', $_SERVER['REQUEST_URI'], 1));
         $tmpPath = explode('/', $route[0]);
         $routePath = [];
         // Cleaning path
@@ -53,7 +55,6 @@ class Router
                 $routePath[] = $pathElement;
             }
         }
-
         // Controller
         if (isset($routePath[0]) && $routePath[0] !== '') {
             self::$_controller = $routePath[0];
@@ -129,7 +130,7 @@ class Router
     public static function executeAction()
     {
         // Check for controller
-        $controllerPath = 'app/Controller/' . Str::controllerName(self::$_controller).'.php';
+        $controllerPath = 'app/Controller/' . Str::controllerName(self::$_controller) . '.php';
 
         if (file_exists($controllerPath)) {
             require_once($controllerPath);
