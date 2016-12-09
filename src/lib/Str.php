@@ -63,14 +63,14 @@ class Str
     /**
      * Returns a controller classname
      *
-     * @param string  $table     Table name
+     * @param string  $name      Controller name
      * @param boolean $namespace Flag to prefix the classname by App\Controller
      *                           namespace
      * @return string
      */
-    public static function controllerName($table, $namespace = false)
+    public static function controllerName($name, $namespace = false)
     {
-        $out = self::camelize(self::pluralize($table) . '_controller', true);
+        $out = self::camelize($name . '_controller', true);
         if ($namespace) {
             $out = 'App\\Controller\\' . $out;
         }
