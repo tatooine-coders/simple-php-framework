@@ -4,6 +4,7 @@ namespace TC\Router;
 use TC\Lib\Config;
 use TC\Lib\Hash;
 use TC\Lib\Str;
+use TC\Controller\Controller;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -36,6 +37,12 @@ class Router
      * @var array
      */
     static protected $_params = [];
+
+    /**
+     * Controller
+     * @var Controller
+     */
+    static protected $_controllerName = null;
 
     /**
      * Initializes the route from passed parameters
@@ -134,12 +141,20 @@ class Router
 
         if (file_exists($controllerPath)) {
             require_once($controllerPath);
+
             $controllerName = '\\App\\Controller\\' . self::$_controller . 'Controller';
-            $controller = new $controllerName;
+            self::$_controllerName = new $controllerName;
             // Check for action
-            if (method_exists($controller, self::$_action)) {
+            if (method_exists(self::$_controllerName, self::$_action)) {
+                // Before_action
+                self::$_controllerName->beforeAction();
+                // Action
                 $action = self::$_action;
-                $controller->$action();
+                self::$_controllerName->$action();
+                // After action
+                self::$_controllerName->afterAction();
+                // Render
+                self::$_controllerName->render();
             } else {
                 die('404 - Action not found');
             }
