@@ -42,6 +42,11 @@ class Console
     ];
 
     /**
+     * Indentation pattern
+     */
+    const INDENT = '  ';
+
+    /**
      * Returns a text wrapped in the given color
      *
      * @param string $text  Text to wrap
@@ -61,9 +66,12 @@ class Console
      */
     public static function greeter()
     {
-        $out = File::nl(0, 'Welcome to the SPF console')
-            . File::nl(0, '==========================')
-            . File::nl(0, '~ 2016 ~ Tatooine Coders ~', 2);
+        $out = "\n"
+            . File::nl(0, '          +----------------------------+')
+            . File::nl(0, '          | Welcome to the SPF console |')
+            . File::nl(0, '          ==============================')
+            . File::nl(0, '          | ~ 2016 ~ Tatooine Coders ~ |')
+            . File::nl(0, '          +----------------------------+', 2);
         return self::color($out, 'green');
     }
 
@@ -76,7 +84,7 @@ class Console
      */
     public static function error($text)
     {
-        return self::color('Error: ' . $text, 'red');
+        return self::color($text, 'red');
     }
 
     /**
@@ -88,7 +96,7 @@ class Console
      */
     public static function info($text)
     {
-        return self::color('Info: ' . $text, 'blue');
+        return self::color($text, 'blue');
     }
 
     /**
@@ -100,7 +108,7 @@ class Console
      */
     public static function warning($text)
     {
-        return self::color('Warning: ' . $text, 'yellow');
+        return self::color($text, 'yellow');
     }
 
     /**
@@ -134,5 +142,63 @@ class Console
             . File::nl(1, self::color('- help', 'cyan'))
             . File::nl(3, 'Shows this error message');
         // @codingStandardsIgnoreEnd
+    }
+
+    /**
+     * Prints an error message and quits
+     *
+     * @param string $message  Text to display
+     * @param bool   $showHelp Set to true to display the help message
+     *
+     * @return void
+     */
+    public static function quit($message, $showHelp = true)
+    {
+        // Check for longest string in message
+        $maxLength = max(array_map('strlen', preg_split('/\n/', $message)));
+
+        // Dispays the string
+        echo "\n";
+        echo self::error(File::nl(0, str_repeat('-', $maxLength)));
+        echo self::error(File::nl(0, $message));
+        echo self::error(File::nl(0, str_repeat('-', $maxLength), 2));
+        if ($showHelp) {
+            echo self::help();
+        }
+        die;
+    }
+
+    /**
+     * Creates an underlined title
+     *
+     * @param string $name      Title
+     * @param string $underline Character used
+     *
+     * @return string
+     */
+    public static function title($name, $underline = '-')
+    {
+        return "\n"
+            . File::nl(0, self::color($name, 'blue'))
+            . File::nl(0, self::color(str_repeat($underline, strlen($name)), 'blue'));
+    }
+
+    /**
+     * Indents a text with a given depth
+     *
+     * @param string|array $text  Text with line breaks or array of lines
+     * @param integer      $depth Indentation depth
+     *
+     * @return string
+     */
+    public static function indent($text, $depth = 0)
+    {
+        if (!is_array($text)) {
+            $text = preg_split('/\n/', $text);
+        }
+        foreach ($text as $k => $v) {
+            $text[$k] = str_repeat(self::INDENT, $depth) . $v;
+        }
+        return implode("\n", $text);
     }
 }
