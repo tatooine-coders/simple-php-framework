@@ -124,6 +124,9 @@ class Console
             // Controllers
             . File::nl(2, self::color('controllers [model1, model2,...] --force --all', 'light_cyan'))
             . File::nl(3, 'Generates controllers')
+            // Views
+            . File::nl(2, self::color('views model [view1, view2,...] --force --all', 'light_cyan'))
+            . File::nl(3, 'Generates view for the given actions and table model')
             // All
             . File::nl(2, self::color('all [model1, model2,...] --force --all', 'light_cyan'))
             . File::nl(3, 'Generates entities, collections and controllers')
