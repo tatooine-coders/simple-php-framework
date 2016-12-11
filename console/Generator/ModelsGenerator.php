@@ -126,6 +126,9 @@ abstract class ModelsGenerator extends Generator
         }
 
         $folder = 'app/Model/Entity/';
+        if (!file_exists($folder)) {
+            mkdir($folder);
+        }
         $tableName = ucfirst(Str::singularize($table));
         $file = $folder . Str::entityname($table) . '.php';
         if (!file_exists($file) || self::$_flags['force']) {
