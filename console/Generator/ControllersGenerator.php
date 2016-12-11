@@ -53,12 +53,11 @@ abstract class ControllersGenerator extends Generator
     /**
      * Generates controllers classes for given table list
      *
-     * @param array $tables List of table names
-     *
      * @return void
      */
-    protected static function controllers($tables = [])
+    protected static function controllers()
     {
+        // List of tables for wich the controllers should be generated
         $tables = self::getTables();
 
         foreach ($tables as $table => $attributes) {
@@ -76,7 +75,7 @@ abstract class ControllersGenerator extends Generator
      */
     protected static function controller($table, $attributes)
     {
-        echo Console::info(File::nl(0, '  > Generating ' . Str::controllerName($table)));
+        echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::controllerName($table), 1)));
 
         // Entity name
         $entityName = Str::entityName($table);
@@ -93,11 +92,39 @@ abstract class ControllersGenerator extends Generator
         // Plural form of the table name
         $pluralName = Str::pluralize($table);
         // Entity object
-        $entity = new $entityFullName;
+        if (class_exists($entityFullName)) {
+            $entity = new $entityFullName;
+        } else {
+            echo Console::warning(
+                File::nl(
+                    0,
+                    Console::indent(
+                        '> Entity "' . $entityFullName . '" does not exist. '
+                        . 'An empty one will be used to generate the controller'
+                    ),
+                    2
+                )
+            );
+            $entity = new \TC\Model\Entity\Entity;
+        }
         // Entity primary key
         $entityPk = $entity->getPrimary();
         // Connection object
-        $collection = new $collectionFullName;
+        if (class_exists($collectionFullName)) {
+            $collection = new $collectionFullName;
+        } else {
+            echo Console::warning(
+                File::nl(
+                    0,
+                    Console::indent(
+                        '> Collection "' . $collectionFullName . '" does not exist. '
+                        . 'An empty one will be used to generate the controller'
+                    ),
+                    2
+                )
+            );
+            $collection = new \TC\Model\Collection\Collection();
+        }
         // Output folder
         $folder = 'app/Controller/';
         // Output file name
@@ -217,7 +244,7 @@ abstract class ControllersGenerator extends Generator
             file_put_contents($file, $current);
         } else {
             echo Console::warning(
-                File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")')
+                File::nl(0, Console::indent('>>> Can\'t write file "' . $file . '" because it already exists', 2))
             );
         }
     }
@@ -232,24 +259,21 @@ abstract class ControllersGenerator extends Generator
      */
     public static function generate($action = null)
     {
-        // Check for a flag as action
-        if (in_array($action, ['--force', '--all'])) {
-            self::$_flags[ltrim($action, '--')] = true;
-            $action = null;
-        } elseif (!empty($action)) {
+        echo Console::title('Generating controllers...');
+
+        if (!empty($action)) {
             // Add $action to the list of parameters
             self::$_parameters[] = $action;
         }
-
         // Generate the controllers
-        if (count(self::$_parameters) > 0 || self::$_flags['force']) {
+        if (count(self::$_parameters) > 0 || self::$_flags['all']) {
             self::controllers();
+            self::dumpautoload();
         } else {
-            echo File::nl(0, Console::error('Nothing to do'));
-            echo Console::help();
-            die();
+            Console::quit(
+                'You should provide at least one table name, or use the "--all" flag.'
+                . "\n" . 'Check the help for more informations.'
+            );
         }
-
-        self::dumpautoload();
     }
 }

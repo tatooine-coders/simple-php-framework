@@ -8,7 +8,7 @@ use TC\Lib\Hash;
 use TC\Lib\Str;
 
 /*
- * Lading the site configuration
+ * Loading the site configuration
  */
 Config::load('config.php');
 
@@ -48,12 +48,6 @@ $flags = [];
  */
 $params = [];
 
-/**
- * Base dir
- * @const String SPF_BASE
- */
-define('SPF_BASE', dirname(dirname(__FILE__).'../'));
-
 /*
  * Welcome text
  */
@@ -64,28 +58,36 @@ echo Console::greeter();
  */
 for ($i = 3; $i < $argc; $i++) {
     if (preg_match('/--(.*)/', $argv[$i])) {
-        $flags[] = ltrim($argv[$i], '-');
+        $flags[] = ltrim($argv[$i], '--');
     } else {
         $params[] = $argv[$i];
     }
 }
 
+// Checks if $action is a flag:
+$trimmedTarget = ltrim($target, '--');
+if ($trimmedTarget != $target) {
+    $target = null;
+    $flags[] = $trimmedTarget;
+}
+
 if (!is_null($class) && !is_null($action)) {
     switch (strtolower($class)) {
         case 'generate':
-            echo Console::info(File::nl(0, 'Preparing the ' . $action . ' generator', 1));
             $controllerName = 'TC\\Console\\Generator\\' . Str::camelize($action . '_generator', true);
             break;
         default:
-            echo Console::error(File::nl(0, 'I don\'t know what to do'));
-            echo Console::help();
-            die();
+            Console::quit('There is no shell group for "' . $class . '". Check the help for more informations.');
     }
-
-    $controllerName::init($params, $flags);
-    $controllerName::generate($target);
+    if (class_exists($controllerName)) {
+        $controllerName::init($params, $flags);
+        $controllerName::generate($target);
+    } else {
+        Console::quit(
+            'There is no shell for "' . $controllerName . '".'
+            . "\n" . 'Check the help for more informations.'
+        );
+    }
 } else {
-    echo Console::error(File::nl(0, 'I don\'t know what to do'));
-    echo Console::help();
-    die();
+    Console::quit('No action or shell specified. Check the help for more informations.');
 }

@@ -111,7 +111,7 @@ abstract class ModelsGenerator extends Generator
      */
     protected static function entity($table, $attributes)
     {
-        echo Console::info(File::nl(0, '  > Generating ' . Str::entityName($table)));
+        echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::entityName($table), 1)));
 
         $stringList = null;
         $fieldsList = [];
@@ -221,7 +221,7 @@ abstract class ModelsGenerator extends Generator
             file_put_contents($file, $current);
         } else {
             echo Console::warning(
-                File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")')
+                File::nl(0, Console::indent('>>> Can\'t write file "' . $file . '" because it already exists.', 2))
             );
         }
     }
@@ -236,7 +236,7 @@ abstract class ModelsGenerator extends Generator
      */
     protected static function collection($table, $attributes)
     {
-        echo Console::info(File::nl(0, '  > Generating ' . Str::collectionName($table)));
+        echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::collectionName($table), 1)));
 
         $folder = 'app/Model/Collection/';
         if (!file_exists($folder)) {
@@ -276,7 +276,7 @@ abstract class ModelsGenerator extends Generator
             file_put_contents($file, $current);
         } else {
             echo Console::warning(
-                File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")')
+                File::nl(0, Console::indent('>>> Can\'t write file "' . $file . '" because it already exists.', 2))
             );
         }
     }
@@ -291,22 +291,32 @@ abstract class ModelsGenerator extends Generator
      */
     public static function generate($action = null)
     {
-        switch ($action) {
-            case 'all':
-                self::collections();
-                self::entities();
-                self::dumpautoload();
-                break;
-            case 'collections':
-                self::collections();
-                self::dumpautoload();
-                break;
-            case 'entities':
-                self::entities();
-                self::dumpautoload();
-                break;
-            default:
-                die('What do you want to do ?');
+        if (count(self::$_parameters) > 0 || self::$_flags['all']) {
+            switch ($action) {
+                case 'all':
+                    echo Console::title('Generating entities and collections...');
+                    self::collections();
+                    self::entities();
+                    self::dumpautoload();
+                    break;
+                case 'collections':
+                    echo Console::title('Generating collections...');
+                    self::collections();
+                    self::dumpautoload();
+                    break;
+                case 'entities':
+                    echo Console::title('Generating entities...');
+                    self::entities();
+                    self::dumpautoload();
+                    break;
+                default:
+                    Console::quit('Unrecognized action: "' . $action . '"');
+            }
+        } else {
+            Console::quit(
+                'You should provide at least one table name, or use the "--all" flag.' .
+                "\n" . 'Check the help for more informations.'
+            );
         }
     }
 }

@@ -51,41 +51,61 @@ abstract class ViewsGenerator extends Generator
     /**
      * Returns the list of tables to generate with their columns
      *
-     * @return array
+     * @param string $table Table name
      *
-     * @todo delete me
+     * @return array
      */
-    protected static function getTables($tables)
+    protected static function getTable($table)
     {
-        if (self::$_flags['all']) {
+        // If --all and no table specified, get all tables
+        if (self::$_flags['all'] && empty($table)) {
             return DB::getTablesColumns(DB::getTablesNames());
         } else {
-            return DB::getTablesColumns($tables);
+            return DB::getTablesColumns([$table]);
         }
     }
 
     /**
      * Generates entities classes for given table list
      *
-     * @param array $tables List of table names
+     * @param string $targetTable Table name
      *
      * @return void
      */
-    protected static function views($tables = [])
+    protected static function views($targetTable)
     {
-        self::$_tableList = self::getTables($tables);
-        
+        self::$_tableList = self::getTable($targetTable);
+
         foreach (self::$_tableList as $table => $attributes) {
+            if (count(self::$_tableList)>1) {
+                echo Console::info(File::nl(0, 'Table ' . Str::entityName($table)));
+            }
             $entity = Str::entityName($table, true);
-            self::$_entities[$table] = new $entity;
-//            var_dump(self::$_entities['users']->getPrimary());die;
-            foreach (self::$_parameters as $view) {
-                if (in_array($view, ['index', 'add', 'update', 'view'])) {
-                    Console::info(File::nl(2, 'Generating view ' . $view . ' for table ' . $table));
-                    self::$view($table, $attributes);
-                } else {
-                    Console::warning(File::nl(2, 'Sorry, we can\'t build the ' . $view . ' view for table ' . $table));
+            // Check entity existence
+            if (class_exists($entity)) {
+                self::$_entities[$table] = new $entity;
+                // Create wanted views
+                foreach (self::$_parameters as $view) {
+                    if (in_array($view, ['index', 'add', 'update', 'view'])) {
+                        self::$view($table, $attributes);
+                    } else {
+                        Console::warning(
+                            File::nl(
+                                2,
+                                'Sorry, we can\'t build the '
+                                . $view . ' view for table ' . $table
+                            )
+                        );
+                    }
                 }
+            } else {
+                Console::warning(
+                    File::nl(
+                        0,
+                        'Entity ' . $entity
+                        . ' not found. Skipping the views for this table.'
+                    )
+                );
             }
         }
     }
@@ -100,7 +120,16 @@ abstract class ViewsGenerator extends Generator
      */
     protected static function index($table, $attributes)
     {
-        echo Console::info(File::nl(0, '  > Generating "index" view for ' . Str::entityName($table)));
+        echo Console::info(
+            File::nl(
+                0,
+                Console::indent(
+                    '> Generating "index" view for '
+                    . Str::entityName($table),
+                    1
+                )
+            )
+        );
 
         // Destination
         $folder = 'app/View/' . Str::camelize($table, true) . '/';
@@ -113,7 +142,11 @@ abstract class ViewsGenerator extends Generator
         $attributesList = array_keys($attributes);
 
         if (!file_exists($file) || self::$_flags['force']) {
-            $current = File::nl(0, '<a href="/' . $table . '/add">New ' . Str::prettify(Str::singularize($table)) . '</a>')
+            $current = File::nl(
+                0,
+                '<a href="/' . $table . '/add">New '
+                . Str::prettify(Str::singularize($table)) . '</a>'
+            )
                 . File::nl(0, '<table border="1">')
                 . File::nl(1, '<thead>');
             foreach ($attributesList as $attribute) {
@@ -122,16 +155,43 @@ abstract class ViewsGenerator extends Generator
             $current .= File::nl(2, '<th>Actions</th>');
             $current .= File::nl(1, '</thead>')
                 . File::nl(1, '<tbody>')
-                . File::nl(2, '<?php foreach($' . $table . ' as $' . Str::singularize($table) . ') : ?>')
+                . File::nl(
+                    2,
+                    '<?php foreach($' . $table . ' as $'
+                    . Str::singularize($table) . ') : ?>'
+                )
                 . File::nl(3, '<tr>');
             foreach ($attributesList as $attribute) {
-                $current .= File::nl(4, '<td><?php echo $' . Str::singularize($table) . '->' . $attribute . ' ?></td>');
+                $current .= File::nl(
+                    4,
+                    '<td><?php echo $'
+                    . Str::singularize($table) . '->'
+                    . $attribute . ' ?></td>'
+                );
             }
 
             $current .= File::nl(4, '<td>')
-                . File::nl(5, '<a href="/' . $table . '/view?' . self::$_entities[$table]->getPrimary() . '=<?php echo $' . Str::singularize($table) . '->' . self::$_entities[$table]->getPrimary() . '?>">View</a>')
-                . File::nl(5, '<a href="/' . $table . '/update?' . self::$_entities[$table]->getPrimary() . '=<?php echo $' . Str::singularize($table) . '->' . self::$_entities[$table]->getPrimary() . '?>">Update</a>')
-                . File::nl(5, '<a href="/' . $table . '/delete?' . self::$_entities[$table]->getPrimary() . '=<?php echo $' . Str::singularize($table) . '->' . self::$_entities[$table]->getPrimary() . '?>">Delete</a>')
+                . File::nl(
+                    5,
+                    '<a href="/' . $table . '/view?'
+                    . self::$_entities[$table]->getPrimary() . '=<?php echo $'
+                    . Str::singularize($table) . '->'
+                    . self::$_entities[$table]->getPrimary() . '?>">View</a>'
+                )
+                . File::nl(
+                    5,
+                    '<a href="/' . $table . '/update?'
+                    . self::$_entities[$table]->getPrimary() . '=<?php echo $'
+                    . Str::singularize($table) . '->'
+                    . self::$_entities[$table]->getPrimary() . '?>">Update</a>'
+                )
+                . File::nl(
+                    5,
+                    '<a href="/' . $table . '/delete?'
+                    . self::$_entities[$table]->getPrimary() . '=<?php echo $'
+                    . Str::singularize($table) . '->'
+                    . self::$_entities[$table]->getPrimary() . '?>">Delete</a>'
+                )
                 . File::nl(4, '</td>')
                 . File::nl(3, '</tr>')
                 . File::nl(2, '<?php endforeach; ?>')
@@ -141,7 +201,15 @@ abstract class ViewsGenerator extends Generator
             file_put_contents($file, $current);
         } else {
             echo Console::warning(
-                File::nl(0, 'Can\'t write file "' . Str::singularize($file) . '" because it already exists (in "' . $folder . '")')
+                File::nl(
+                    0,
+                    Console::indent(
+                        '>>> Can\'t write file "'
+                        . Str::singularize($file) . '" because it already exists (in "'
+                        . $folder . '")',
+                        2
+                    )
+                )
             );
         }
     }
@@ -156,7 +224,16 @@ abstract class ViewsGenerator extends Generator
      */
     protected static function add($table, $attributes)
     {
-        echo Console::info(File::nl(0, '  > Generating "add" view for ' . Str::entityName($table)));
+        echo Console::info(
+            File::nl(
+                0,
+                Console::indent(
+                    '> Generating "add" view for '
+                    . Str::entityName($table),
+                    1
+                )
+            )
+        );
 
         // Destination
         $folder = 'app/View/' . Str::camelize($table, true) . '/';
@@ -174,7 +251,11 @@ abstract class ViewsGenerator extends Generator
 
             foreach ($attributesList as $attribute) {
                 $current .= File::nl(1, '<label for="">' . Str::prettify($attribute) . '')
-                    . File::nl(2, '<input type="text" name="' . $attribute . '" id="' . $table . '_' . $attribute . '" />')
+                    . File::nl(
+                        2,
+                        '<input type="text" name="' . $attribute . '" id="'
+                        . $table . '_' . $attribute . '" />'
+                    )
                     . File::nl(1, '</label>')
                     . File::nl(1, '<br/>', 2);
             }
@@ -185,12 +266,21 @@ abstract class ViewsGenerator extends Generator
             file_put_contents($file, $current);
         } else {
             echo Console::warning(
-                File::nl(0, 'Can\'t write file "' . Str::singularize($file) . '" because it already exists (in "' . $folder . '")')
+                File::nl(
+                    0,
+                    Console::indent(
+                        '>>> Can\'t write file "'
+                        . Str::singularize($file)
+                        . '" because it already exists (in "'
+                        . $folder . '")',
+                        2
+                    )
+                )
             );
         }
     }
 
-   /**
+    /**
      * Generates Update view for a given table
      *
      * @param string $table      Table name
@@ -200,7 +290,16 @@ abstract class ViewsGenerator extends Generator
      */
     protected static function update($table, $attributes)
     {
-        echo Console::info(File::nl(0, '  > Generating "update" view for ' . Str::entityName($table)));
+        echo Console::info(
+            File::nl(
+                0,
+                Console::indent(
+                    '> Generating "update" view for '
+                    . Str::entityName($table),
+                    1
+                )
+            )
+        );
 
         // Destination
         $folder = 'app/View/' . Str::camelize($table, true) . '/';
@@ -218,7 +317,12 @@ abstract class ViewsGenerator extends Generator
 
             foreach ($attributesList as $attribute) {
                 $current .= File::nl(1, '<label for="">' . Str::prettify($attribute) . '')
-                    . File::nl(2, '<input type="text" name="' . $attribute . '" id="' . $table . '_' . $attribute . '" value="<?php echo $' . Str::singularize($table) . '->' . $attribute . ' ?>"/>')
+                    . File::nl(
+                        2,
+                        '<input type="text" name="' . $attribute . '" id="'
+                        . $table . '_' . $attribute . '" value="<?php echo $'
+                        . Str::singularize($table) . '->' . $attribute . ' ?>"/>'
+                    )
                     . File::nl(1, '</label>')
                     . File::nl(1, '<br/>', 2);
             }
@@ -229,11 +333,18 @@ abstract class ViewsGenerator extends Generator
             file_put_contents($file, $current);
         } else {
             echo Console::warning(
-                File::nl(0, 'Can\'t write file "' . Str::singularize($file) . '" because it already exists (in "' . $folder . '")')
+                File::nl(
+                    0,
+                    Console::indent(
+                        '>>> Can\'t write file "'
+                        . Str::singularize($file) . '" because it already exists (in "' . $folder . '")',
+                        2
+                    )
+                )
             );
         }
-    }     
-   
+    }
+
     /**
      * Generates View view for a given table
      *
@@ -244,7 +355,16 @@ abstract class ViewsGenerator extends Generator
      */
     protected static function view($table, $attributes)
     {
-        echo Console::info(File::nl(0, '  > Generating "view" view for ' . Str::entityName($table)));
+        echo Console::info(
+            File::nl(
+                0,
+                Console::indent(
+                    '> Generating "view" view for '
+                    . Str::entityName($table),
+                    1
+                )
+            )
+        );
 
         // Destination
         $folder = 'app/View/' . Str::camelize($table, true) . '/';
@@ -261,16 +381,39 @@ abstract class ViewsGenerator extends Generator
                 . File::nl(0, '<dl>');
             foreach ($attributesList as $attribute) {
                 $current .= File::nl(1, '<dt>' . Str::prettify($attribute) . '</dt>')
-                    . File::nl(1, '<dd><?php echo $' . Str::singularize($table) . '->' . $attribute . ' ?></dd>');
+                    . File::nl(
+                        1,
+                        '<dd><?php echo $' . Str::singularize($table)
+                        . '->' . $attribute . ' ?></dd>'
+                    );
             }
             $current .= File::nl(0, '</dl>')
-                . File::nl(0, '<a href="/' . $table . '/update?' . self::$_entities[$table]->getPrimary() . '=<?php echo $' . Str::singularize($table) . '->' . self::$_entities[$table]->getPrimary() . '?>">Update</a>')
-                . File::nl(0, '<a href="/' . $table . '/delete?' . self::$_entities[$table]->getPrimary() . '=<?php echo $' . Str::singularize($table) . '->' . self::$_entities[$table]->getPrimary() . '?>">Delete</a>');
+                . File::nl(
+                    0,
+                    '<a href="/' . $table . '/update?'
+                    . self::$_entities[$table]->getPrimary() . '=<?php echo $'
+                    . Str::singularize($table) . '->'
+                    . self::$_entities[$table]->getPrimary() . '?>">Update</a>'
+                )
+                . File::nl(
+                    0,
+                    '<a href="/' . $table . '/delete?'
+                    . self::$_entities[$table]->getPrimary() . '=<?php echo $'
+                    . Str::singularize($table) . '->'
+                    . self::$_entities[$table]->getPrimary() . '?>">Delete</a>'
+                );
 
             file_put_contents($file, $current);
         } else {
             echo Console::warning(
-                File::nl(0, 'Can\'t write file "' . Str::singularize($file) . '" because it already exists (in "' . $folder . '")')
+                File::nl(
+                    0,
+                    Console::indent(
+                        '>>> Can\'t write file "' . Str::singularize($file)
+                        . '" because it already exists (in "' . $folder . '")',
+                        2
+                    )
+                )
             );
         }
     }
@@ -279,28 +422,37 @@ abstract class ViewsGenerator extends Generator
      * Main method to be called by spf.php. This method will call the different
      * generator using the different actions.
      *
-     * @param string $action Action to perform
+     * @param string $action Table name
      *
      * @return void
      */
     public static function generate($action = null)
     {
-        if (in_array($action, ['--force', '--all'])) {
-            self::$_flags[ltrim($action, '--')] = true;
-            $action = null;
-        } elseif (!empty($action)) {
-            // Add $action to the list of parameters
-            self::$_parameters[] = $action;
+        // Checking for action: it's a parameter in our case
+//        if (!empty($action)) {
+//            // Add $action to the list of parameters
+//            self::$_parameters[] = $action;
+//        }
+        // Checking for --all flag: overides the given parameters
+        if (self::$_flags['all']) {
+            self::$_parameters = ['index', 'view', 'add', 'update'];
         }
-        
-        if(self::$_flags['all']){
-            self::$_parameters=['index', 'view', 'add', 'update'];
-        }
-        
-        if (!is_null($action) || self::$_flags['all']) {
-            self::views([$action]);
+
+        if (!empty($action) || self::$_flags['all']) {
+            if (count(self::$_parameters) > 0 || self::$_flags['all']) {
+                echo Console::title('Generating views...');
+                self::views($action);
+            } else {
+                Console::quit(
+                    'You should provide at least one view name, or use the "--all" flag.'
+                    . "\n" . 'Check the help for more informations.'
+                );
+            }
         } else {
-            die('You should provide a table name.');
+            Console::quit(
+                'You should provide at least one table name, or use the "--all" flag.'
+                . "\n" . 'Check the help for more informations.'
+            );
         }
     }
 }

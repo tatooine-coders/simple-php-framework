@@ -34,7 +34,7 @@ class Generator
     /**
      * List of flags passed to the class, so they can be passed to other ones
      * the same way they were defined.
-     * 
+     *
      * @var array
      */
     protected static $_passedFlags = [];
@@ -50,7 +50,7 @@ class Generator
     public static function init($parameters, $flags)
     {
         static::$_passedFlags = $flags;
-        
+
         foreach (self::$_passedFlags as $flag) {
             if (key_exists($flag, static::$_flags)) {
                 static::$_flags[$flag] = !static::$_flags[$flag];
@@ -64,11 +64,12 @@ class Generator
 
     /**
      * Executes the `composer dumpautoload` script
-     * 
+     *
      * @return void
      */
     public static function dumpautoload()
     {
-        exec('exec composer dumpautoload -d ' . SPF_BASE);
+        $baseDir = dirname(__FILE__) . '/../../';
+        exec('exec composer dumpautoload -d ' . $baseDir);
     }
 }

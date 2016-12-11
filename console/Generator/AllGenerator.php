@@ -3,9 +3,7 @@ namespace TC\Console\Generator;
 
 use TC\Console\Generator\Generator;
 use TC\Lib\Console;
-use TC\Lib\DB;
 use TC\Lib\File;
-use TC\Lib\Str;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -46,23 +44,33 @@ abstract class AllGenerator extends Generator
      */
     public static function generate($action = null)
     {
+        echo Console::title('Generating the MVC files');
 
-        // Check for a flag as action
-        if (in_array($action, ['--force', '--all'])) {
-            self::$_flags[ltrim($action, '--')] = true;
-            $action = null;
-        } elseif (!empty($action)) {
+        // Checking for action
+        if (!empty($action)) {
             // Add $action to the list of parameters
             self::$_parameters[] = $action;
-        } else {
-            echo File::nl(0, Console::error('Nothing to do'));
-            echo Console::help();
-            die();
+        } elseif (!self::$_flags['all'] && empty($action)) {
+            Console::quit(
+                'You should provide at least one table name, or use the "--all" flag.'
+                . "\n" . 'Check the help for more informations.'
+            );
         }
-//        var_dump(['action' => $action, 'p' => self::$_parameters, 'f' => self::$_flags]);
+        // Models
         ModelsGenerator::init(self::$_parameters, self::$_passedFlags);
         ModelsGenerator::generate('all');
+
+        // Controllers
         ControllersGenerator::init(self::$_parameters, self::$_passedFlags);
-        ControllersGenerator::generate(null);
+        ControllersGenerator::generate($action);
+
+        // Forcing --all flag for views (this flag forces all the views, but not
+        // all the tables)
+        $flagsForViews=self::$_passedFlags;
+        if (!in_array('all', $flagsForViews)) {
+            $flagsForViews[]='all';
+        }
+        ViewsGenerator::init([], $flagsForViews);
+        ViewsGenerator::generate($action);
     }
 }
