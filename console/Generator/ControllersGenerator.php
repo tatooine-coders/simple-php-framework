@@ -122,7 +122,7 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(0, ' * @link     https://github.com/tatooine-coders/simple-php-framework/', 1)
                 . File::nl(0, ' */', 1)
                 . File::nl(0, 'class ' . $controllerName . ' extends Controller', 1)
-                . File::nl(0, '{', 1);
+                . File::nl(0, '{', 2);
 
             /*
              * Index method
@@ -136,7 +136,8 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(1, '{', 1)
                 . File::nl(2, '$' . $pluralName . ' = new ' . $collectionName . ';', 1)
                 . File::nl(2, '$' . $pluralName . '->fetchAll();', 1)
-                . File::nl(2, 'var_dump($' . $pluralName . ');', 1)
+                . File::nl(2, '$this->set(\'' . $pluralName . '\', $' . $pluralName . ');', 1)
+                . File::nl(2, '$this->template=\'' . Str::camelize($table, true) . '/index\';', 1)
                 . File::nl(1, '}', 2);
 
             /*
@@ -153,7 +154,8 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(2, '$' . $entityPk . ' = Router::getParam(\'' . $entityPk . '\');', 1)
                 . File::nl(2, '$' . $singularName . '->fetch($' . $entityPk . ');', 1)
                 . File::nl(2, 'if (!is_null($' . $singularName . '->' . $entityPk . ')) {', 1)
-                . File::nl(3, 'var_dump($' . $singularName . ');', 1)
+                . File::nl(3, '$this->set(\'' . $singularName . '\', $' . $singularName . ');', 1)
+                . File::nl(3, '$this->template=\'' . Str::camelize($table, true) . '/view\';', 1)
                 . File::nl(2, '} else {', 1)
                 . File::nl(3, 'die(\'' . $singularName . ' not found.\');', 1)
                 . File::nl(2, '}', 1)
@@ -169,7 +171,7 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(1, ' */', 1)
                 . File::nl(1, 'public function add()', 1)
                 . File::nl(1, '{', 1)
-                . File::nl(2, 'die(\'Add() is not implemented\');', 1)
+                . File::nl(2, '$this->template=\'' . Str::camelize($table, true) . '/add\';', 1)
                 . File::nl(1, '}', 2);
             /*
              * Update method
@@ -181,8 +183,15 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(1, ' */', 1)
                 . File::nl(1, 'public function update()', 1)
                 . File::nl(1, '{', 1)
+                . File::nl(2, '$' . $singularName . ' = new ' . $entityName . ';', 1)
                 . File::nl(2, '$' . $entityPk . ' = Router::getParam(\'' . $entityPk . '\');', 1)
-                . File::nl(2, 'die(\'Update() is not implemented\');', 1)
+                . File::nl(2, '$' . $singularName . '->fetch($' . $entityPk . ');', 1)
+                . File::nl(2, 'if (!is_null($' . $singularName . '->' . $entityPk . ')) {', 1)
+                . File::nl(3, '$this->set(\'' . $singularName . '\', $' . $singularName . ');', 1)
+                . File::nl(3, '$this->template=\'' . Str::camelize($table, true) . '/update\';', 1)
+                . File::nl(2, '} else {', 1)
+                . File::nl(3, 'die(\'' . $singularName . ' not found.\');', 1)
+                . File::nl(2, '}', 1)
                 . File::nl(1, '}', 2);
             /*
              * Delete method
@@ -240,7 +249,7 @@ abstract class ControllersGenerator extends Generator
             echo Console::help();
             die();
         }
-        
+
         self::dumpautoload();
     }
 }
