@@ -155,10 +155,10 @@ class Str
     /**
      * Returns a pretty string to be displayed in views: underscores are replaced
      * by spaces
-     * 
-     * @param string $str Underscored string
-     * @param bool $ucfirst Wether or not to capitalize the first letter
-     * 
+     *
+     * @param string $str     Underscored string
+     * @param bool   $ucfirst Wether or not to capitalize the first letter
+     *
      * @return string
      */
     public static function prettify(string $str, bool $ucfirst = false)

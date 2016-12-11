@@ -38,7 +38,7 @@ abstract class Controller
     /**
      * Constructor
      * Instanciates the view
-     * 
+     *
      * @return void
      */
     public function __construct()
@@ -53,7 +53,7 @@ abstract class Controller
      */
     public function beforeAction()
     {
-       // Generic logic here 
+       // Generic logic here
     }
 
     /**
@@ -68,10 +68,10 @@ abstract class Controller
 
     /**
      * Sets a variable available in view.
-     * 
+     *
      * @param string $variable Variable name
-     * @param mixed $value Variable content
-     * 
+     * @param mixed  $value    Variable content
+     *
      * @return void
      */
     public function set($variable, $value)
@@ -81,7 +81,7 @@ abstract class Controller
 
     /**
      * Calls the renderer and pass it the params
-     * 
+     *
      * @return void
      */
     public function render()

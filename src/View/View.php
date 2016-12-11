@@ -17,10 +17,10 @@ class View
 
     /**
      * Loads the view
-     * 
-     * @param string $template Path to /app/View/<path>.php
-     * @param array $variables Array of variable=>value
-     * 
+     *
+     * @param string $template  Path to /app/View/<path>.php
+     * @param array  $variables Array of variable=>value
+     *
      * @return void
      */
     public function render($template, $variables)
