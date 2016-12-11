@@ -187,7 +187,7 @@ class Console
      * Indents a text with a given depth
      *
      * @param string|array $text  Text with line breaks or array of lines
-     * @param int      $depth Indentation depth
+     * @param int          $depth Indentation depth
      *
      * @return string
      */

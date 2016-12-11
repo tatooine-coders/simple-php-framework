@@ -26,8 +26,8 @@ class Str
     /**
      * Camelizes an underscored string
      *
-     * @param string  $str     String to convert
-     * @param bool $ucfirst Flag to define if the first letter should be uppercased
+     * @param string $str     String to convert
+     * @param bool   $ucfirst Flag to define if the first letter should be uppercased
      *
      * @return string the camelized string
      */
@@ -63,8 +63,8 @@ class Str
     /**
      * Returns a controller classname
      *
-     * @param string  $name      Controller name
-     * @param bool $namespace Flag to prefix the classname by App\Controller
+     * @param string $name      Controller name
+     * @param bool   $namespace Flag to prefix the classname by App\Controller namespace
      *                           namespace
      * @return string
      */
@@ -80,8 +80,8 @@ class Str
     /**
      * Returns an entity classname
      *
-     * @param string  $table     Table name
-     * @param bool $namespace Flag to prefix the classname by App\Model\Entity
+     * @param string $table     Table name
+     * @param bool   $namespace Flag to prefix the classname by App\Model\Entity namespace
      *                           namespace
      *
      * @return string
@@ -99,8 +99,8 @@ class Str
     /**
      * Returns a collection classname
      *
-     * @param string  $table     Table name
-     * @param bool $namespace Flag to prefix the classname by App\Model\Collection
+     * @param string $table     Table name
+     * @param bool   $namespace Flag to prefix the classname by App\Model\Collection namespace
      *                           namespace
      *
      * @return string

@@ -156,8 +156,8 @@ class Entity
     /**
      * Populates the array of data
      *
-     * @param array   $data    Multidimensionnal array of key=>value
-     * @param bool $initial If set to true, the entity will be considered as clean
+     * @param array $data    Multidimensionnal array of key=>value
+     * @param bool  $initial If set to true, the entity will be considered as clean
      *
      * @return void
      */

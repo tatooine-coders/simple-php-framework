@@ -37,9 +37,9 @@ class File
      * Returns a list of $strings suffixed with $suffixes and whitespaces to align
      * them
      *
-     * @param array   $strings  List of strings
-     * @param array   $suffixes List of suffixes strings
-     * @param bool $addSpace If set to true, a space will be added after the
+     * @param array $strings  List of strings
+     * @param array $suffixes List of suffixes strings
+     * @param bool  $addSpace If set to true, a space will be added after the longest string
      *                          longest string
      *
      * @return array
