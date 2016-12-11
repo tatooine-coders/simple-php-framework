@@ -100,7 +100,7 @@ class Router
      *
      * @return mixed Parameter value
      */
-    public static function getParam($param)
+    public static function getParam(string $param)
     {
         if (isset(self::$_params[$param])) {
             return self::$_params[$param];

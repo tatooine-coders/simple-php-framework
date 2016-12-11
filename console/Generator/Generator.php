@@ -47,7 +47,7 @@ class Generator
      *
      * @return void
      */
-    public static function init($parameters, $flags)
+    public static function init(array $parameters, array $flags)
     {
         static::$_passedFlags = $flags;
 

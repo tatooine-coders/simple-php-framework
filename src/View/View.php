@@ -23,7 +23,7 @@ class View
      *
      * @return void
      */
-    public function render($template, $variables)
+    public function render(string $template, array $variables)
     {
         extract($variables);
         // Create path

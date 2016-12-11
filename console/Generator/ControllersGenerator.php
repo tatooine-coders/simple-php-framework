@@ -73,7 +73,7 @@ abstract class ControllersGenerator extends Generator
      *
      * @return void
      */
-    protected static function controller($table, $attributes)
+    protected static function controller(string $table, array $attributes)
     {
         echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::controllerName($table), 1)));
 
@@ -257,7 +257,7 @@ abstract class ControllersGenerator extends Generator
      *
      * @return void
      */
-    public static function generate($action = null)
+    public static function generate(string $action = null)
     {
         echo Console::title('Generating controllers...');
 

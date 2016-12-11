@@ -25,7 +25,7 @@ class File
      *
      * @return string a line of text
      */
-    public static function nl($tabs = 0, $content = null, $nbNl = 1)
+    public static function nl(int $tabs = 0, string $content = null, int $nbNl = 1)
     {
         $tabSize = '    ';
         $nl = "\n";
@@ -39,12 +39,12 @@ class File
      *
      * @param array   $strings  List of strings
      * @param array   $suffixes List of suffixes strings
-     * @param boolean $addSpace If set to true, a space will be added after the
+     * @param bool $addSpace If set to true, a space will be added after the
      *                          longest string
      *
      * @return array
      */
-    public static function equalizeLength(array $strings, array $suffixes = [], $addSpace = false)
+    public static function equalizeLength(array $strings, array $suffixes = [], bool $addSpace = false)
     {
         $maxLength = max(array_map('strlen', $strings));
 

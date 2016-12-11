@@ -55,7 +55,7 @@ abstract class ViewsGenerator extends Generator
      *
      * @return array
      */
-    protected static function getTable($table)
+    protected static function getTable(string $table)
     {
         // If --all and no table specified, get all tables
         if (self::$_flags['all'] && empty($table)) {
@@ -72,7 +72,7 @@ abstract class ViewsGenerator extends Generator
      *
      * @return void
      */
-    protected static function views($targetTable)
+    protected static function views(string $targetTable)
     {
         self::$_tableList = self::getTable($targetTable);
 
@@ -118,7 +118,7 @@ abstract class ViewsGenerator extends Generator
      *
      * @return void
      */
-    protected static function index($table, $attributes)
+    protected static function index(string $table, array $attributes)
     {
         echo Console::info(
             File::nl(
@@ -222,7 +222,7 @@ abstract class ViewsGenerator extends Generator
      *
      * @return void
      */
-    protected static function add($table, $attributes)
+    protected static function add(string $table, array $attributes)
     {
         echo Console::info(
             File::nl(
@@ -288,7 +288,7 @@ abstract class ViewsGenerator extends Generator
      *
      * @return void
      */
-    protected static function update($table, $attributes)
+    protected static function update(string $table, array $attributes)
     {
         echo Console::info(
             File::nl(
@@ -353,7 +353,7 @@ abstract class ViewsGenerator extends Generator
      *
      * @return void
      */
-    protected static function view($table, $attributes)
+    protected static function view(string $table, array $attributes)
     {
         echo Console::info(
             File::nl(
@@ -426,7 +426,7 @@ abstract class ViewsGenerator extends Generator
      *
      * @return void
      */
-    public static function generate($action = null)
+    public static function generate(string $action = null)
     {
         // Checking for action: it's a parameter in our case
 //        if (!empty($action)) {

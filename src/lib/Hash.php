@@ -22,7 +22,7 @@ abstract class Hash
      *
      * @return mixed|null Returns null if key does not exists
      */
-    public static function getValue(array $array, $path)
+    public static function getValue(array $array, string $path)
     {
         $pathHash = explode('.', $path);
         foreach ($pathHash as $chunk) {
@@ -46,7 +46,7 @@ abstract class Hash
      *
      * @return array The new array
      */
-    public static function setValue($array, $path, $value, $overwrite = true)
+    public static function setValue(array $array, string $path, $value, bool $overwrite = true)
     {
         $cheminHash = explode('.', $path);
         $newPath = self::createPath($cheminHash, $value);

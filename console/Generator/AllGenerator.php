@@ -42,7 +42,7 @@ abstract class AllGenerator extends Generator
      *
      * @return void
      */
-    public static function generate($action = null)
+    public static function generate(string $action = null)
     {
         echo Console::title('Generating the MVC files');
 

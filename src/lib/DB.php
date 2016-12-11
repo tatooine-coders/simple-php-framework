@@ -152,7 +152,7 @@ class DB
      *
      * @return array
      */
-    public static function getTablesColumns($tables)
+    public static function getTablesColumns(array $tables)
     {
         $tab = [];
         foreach ($tables as $table) {
@@ -168,7 +168,7 @@ class DB
      *
      * @return array
      */
-    public static function getTableColumns($table)
+    public static function getTableColumns(string $table)
     {
         $query = "SELECT COLUMN_NAME, COLUMN_KEY, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS "
             . "WHERE TABLE_SCHEMA = '" . Config::get('db')['name'] . "' AND TABLE_NAME = '"
@@ -205,7 +205,7 @@ class DB
      *
      * @return string Converted string
      */
-    public static function fieldType($type)
+    public static function fieldType(string $type)
     {
         $type = strtolower($type);
         if (preg_match('/(char|text|blob)(\(\d+\))*/', $type)) {

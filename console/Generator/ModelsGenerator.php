@@ -43,7 +43,7 @@ abstract class ModelsGenerator extends Generator
      *
      * @return string
      */
-    protected static function getSuffix($value)
+    protected static function getSuffix(string $value)
     {
         if ($value['isPrimary']) {
             $suffix = " Primary key";
@@ -76,7 +76,7 @@ abstract class ModelsGenerator extends Generator
      *
      * @return void
      */
-    protected static function entities($tables = [])
+    protected static function entities(array $tables = [])
     {
         $tables = self::getTables();
 
@@ -92,7 +92,7 @@ abstract class ModelsGenerator extends Generator
      *
      * @return void
      */
-    protected static function collections($tables = [])
+    protected static function collections(array $tables = [])
     {
         $tables = self::getTables();
 
@@ -109,7 +109,7 @@ abstract class ModelsGenerator extends Generator
      *
      * @return void
      */
-    protected static function entity($table, $attributes)
+    protected static function entity(string $table, array $attributes)
     {
         echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::entityName($table), 1)));
 
@@ -234,7 +234,7 @@ abstract class ModelsGenerator extends Generator
      *
      * @return void
      */
-    protected static function collection($table, $attributes)
+    protected static function collection(string $table, array $attributes)
     {
         echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::collectionName($table), 1)));
 
@@ -289,7 +289,7 @@ abstract class ModelsGenerator extends Generator
      *
      * @return void
      */
-    public static function generate($action = null)
+    public static function generate(string $action = null)
     {
         if (count(self::$_parameters) > 0 || self::$_flags['all']) {
             switch ($action) {

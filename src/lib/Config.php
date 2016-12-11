@@ -40,7 +40,7 @@ class Config extends Hash
      *
      * @return void
      */
-    public static function load($file)
+    public static function load(string $file)
     {
         if (file_exists($file)) {
             self::$_config += require_once($file);
@@ -56,7 +56,7 @@ class Config extends Hash
      *
      * @return mixed
      */
-    public static function get($param)
+    public static function get(string $param)
     {
         return parent::getValue(self::$_config, $param);
     }
@@ -68,7 +68,7 @@ class Config extends Hash
      * @param mixed  $value New value to assign
      * @return void
      */
-    public static function set($path, $value)
+    public static function set(string $path, $value)
     {
         return parent::setValue(self::$_config, $path, $value);
     }
@@ -80,7 +80,7 @@ class Config extends Hash
      *
      * @return void
      */
-    public static function merge($newparams)
+    public static function merge(array $newparams)
     {
         self::$_config += $newparams;
     }

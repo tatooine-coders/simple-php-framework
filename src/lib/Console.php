@@ -54,7 +54,7 @@ class Console
      *
      * @return string
      */
-    public static function color($text, $color)
+    public static function color(string $text, string $color)
     {
         return self::$txtColors[$color] . $text . self::$txtColors['default'];
     }
@@ -82,7 +82,7 @@ class Console
      *
      * @return string
      */
-    public static function error($text)
+    public static function error(string $text)
     {
         return self::color($text, 'red');
     }
@@ -94,7 +94,7 @@ class Console
      *
      * @return string
      */
-    public static function info($text)
+    public static function info(string $text)
     {
         return self::color($text, 'blue');
     }
@@ -106,7 +106,7 @@ class Console
      *
      * @return string
      */
-    public static function warning($text)
+    public static function warning(string $text)
     {
         return self::color($text, 'yellow');
     }
@@ -152,7 +152,7 @@ class Console
      *
      * @return void
      */
-    public static function quit($message, $showHelp = true)
+    public static function quit(string $message, bool $showHelp = true)
     {
         // Check for longest string in message
         $maxLength = max(array_map('strlen', preg_split('/\n/', $message)));
@@ -176,7 +176,7 @@ class Console
      *
      * @return string
      */
-    public static function title($name, $underline = '-')
+    public static function title(string $name, string $underline = '-')
     {
         return "\n"
             . File::nl(0, self::color($name, 'blue'))
@@ -187,11 +187,11 @@ class Console
      * Indents a text with a given depth
      *
      * @param string|array $text  Text with line breaks or array of lines
-     * @param integer      $depth Indentation depth
+     * @param int      $depth Indentation depth
      *
      * @return string
      */
-    public static function indent($text, $depth = 0)
+    public static function indent(string $text, int $depth = 0)
     {
         if (!is_array($text)) {
             $text = preg_split('/\n/', $text);

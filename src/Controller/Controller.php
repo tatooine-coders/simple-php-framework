@@ -74,7 +74,7 @@ abstract class Controller
      *
      * @return void
      */
-    public function set($variable, $value)
+    public function set(string $variable, $value)
     {
         $this->viewVars[$variable] = $value;
     }
