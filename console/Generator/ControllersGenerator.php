@@ -6,6 +6,8 @@ use TC\Lib\Console;
 use TC\Lib\DB;
 use TC\Lib\File;
 use TC\Lib\Str;
+use TC\Model\Collection\Collection;
+use TC\Model\Entity\Entity;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -53,12 +55,11 @@ abstract class ControllersGenerator extends Generator
     /**
      * Generates controllers classes for given table list
      *
-     * @param array $tables List of table names
-     *
      * @return void
      */
-    protected static function controllers($tables = [])
+    protected static function controllers()
     {
+        // List of tables for wich the controllers should be generated
         $tables = self::getTables();
 
         foreach ($tables as $table => $attributes) {
@@ -74,9 +75,9 @@ abstract class ControllersGenerator extends Generator
      *
      * @return void
      */
-    protected static function controller($table, $attributes)
+    protected static function controller(string $table, array $attributes)
     {
-        echo Console::info(File::nl(0, '  > Generating ' . Str::controllerName($table)));
+        echo Console::nl('> Generating ' . Str::controllerName($table), 1, 'info');
 
         // Entity name
         $entityName = Str::entityName($table);
@@ -93,11 +94,25 @@ abstract class ControllersGenerator extends Generator
         // Plural form of the table name
         $pluralName = Str::pluralize($table);
         // Entity object
-        $entity = new $entityFullName;
+        if (class_exists($entityFullName)) {
+            $entity = new $entityFullName;
+        } else {
+            $errmess = '> Entity "' . $entityFullName . '" does not exist. '
+                . 'An empty one will be used to generate the controller';
+            echo Console::nl($errmess, 2, 'warning');
+            $entity = new Entity;
+        }
         // Entity primary key
         $entityPk = $entity->getPrimary();
         // Connection object
-        $collection = new $collectionFullName;
+        if (class_exists($collectionFullName)) {
+            $collection = new $collectionFullName;
+        } else {
+            $errmess = '> Collection "' . $collectionFullName . '" does not exist. '
+                . 'An empty one will be used to generate the controller';
+            echo Console::nl($errmess, 2, 'warning');
+            $collection = new Collection();
+        }
         // Output folder
         $folder = 'app/Controller/';
         // Output file name
@@ -122,7 +137,7 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(0, ' * @link     https://github.com/tatooine-coders/simple-php-framework/', 1)
                 . File::nl(0, ' */', 1)
                 . File::nl(0, 'class ' . $controllerName . ' extends Controller', 1)
-                . File::nl(0, '{', 1);
+                . File::nl(0, '{', 2);
 
             /*
              * Index method
@@ -136,7 +151,8 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(1, '{', 1)
                 . File::nl(2, '$' . $pluralName . ' = new ' . $collectionName . ';', 1)
                 . File::nl(2, '$' . $pluralName . '->fetchAll();', 1)
-                . File::nl(2, 'var_dump($' . $pluralName . ');', 1)
+                . File::nl(2, '$this->set(\'' . $pluralName . '\', $' . $pluralName . ');', 1)
+                . File::nl(2, '$this->template=\'' . Str::camelize($table, true) . '/index\';', 1)
                 . File::nl(1, '}', 2);
 
             /*
@@ -153,7 +169,8 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(2, '$' . $entityPk . ' = Router::getParam(\'' . $entityPk . '\');', 1)
                 . File::nl(2, '$' . $singularName . '->fetch($' . $entityPk . ');', 1)
                 . File::nl(2, 'if (!is_null($' . $singularName . '->' . $entityPk . ')) {', 1)
-                . File::nl(3, 'var_dump($' . $singularName . ');', 1)
+                . File::nl(3, '$this->set(\'' . $singularName . '\', $' . $singularName . ');', 1)
+                . File::nl(3, '$this->template=\'' . Str::camelize($table, true) . '/view\';', 1)
                 . File::nl(2, '} else {', 1)
                 . File::nl(3, 'die(\'' . $singularName . ' not found.\');', 1)
                 . File::nl(2, '}', 1)
@@ -169,7 +186,7 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(1, ' */', 1)
                 . File::nl(1, 'public function add()', 1)
                 . File::nl(1, '{', 1)
-                . File::nl(2, 'die(\'Add() is not implemented\');', 1)
+                . File::nl(2, '$this->template=\'' . Str::camelize($table, true) . '/add\';', 1)
                 . File::nl(1, '}', 2);
             /*
              * Update method
@@ -181,8 +198,15 @@ abstract class ControllersGenerator extends Generator
                 . File::nl(1, ' */', 1)
                 . File::nl(1, 'public function update()', 1)
                 . File::nl(1, '{', 1)
+                . File::nl(2, '$' . $singularName . ' = new ' . $entityName . ';', 1)
                 . File::nl(2, '$' . $entityPk . ' = Router::getParam(\'' . $entityPk . '\');', 1)
-                . File::nl(2, 'die(\'Update() is not implemented\');', 1)
+                . File::nl(2, '$' . $singularName . '->fetch($' . $entityPk . ');', 1)
+                . File::nl(2, 'if (!is_null($' . $singularName . '->' . $entityPk . ')) {', 1)
+                . File::nl(3, '$this->set(\'' . $singularName . '\', $' . $singularName . ');', 1)
+                . File::nl(3, '$this->template=\'' . Str::camelize($table, true) . '/update\';', 1)
+                . File::nl(2, '} else {', 1)
+                . File::nl(3, 'die(\'' . $singularName . ' not found.\');', 1)
+                . File::nl(2, '}', 1)
                 . File::nl(1, '}', 2);
             /*
              * Delete method
@@ -207,9 +231,8 @@ abstract class ControllersGenerator extends Generator
             $current .= "}\n";
             file_put_contents($file, $current);
         } else {
-            echo Console::warning(
-                File::nl(0, 'Can\'t write file "' . $file . '" because it already exists (in "' . $folder . '")')
-            );
+            $errmess='>>> Can\'t write file "' . $file . '" because it already exists';
+            echo Console::nl($errmess, 2, 'warning');
         }
     }
 
@@ -221,22 +244,23 @@ abstract class ControllersGenerator extends Generator
      *
      * @return void
      */
-    public static function generate($action = null)
+    public static function generate(string $action = null)
     {
-        // Check for a flag as action
-        if (in_array($action, ['--force', '--all'])) {
-            self::$_flags[ltrim($action, '--')] = true;
-            $action = null;
-        } elseif (!empty($action)) {
+        echo Console::title('Generating controllers...');
+
+        if (!empty($action)) {
             // Add $action to the list of parameters
             self::$_parameters[] = $action;
-        } else {
-            echo File::nl(0, Console::error('Nothing to do'));
-            echo Console::help();
-            die();
         }
-
         // Generate the controllers
-        self::controllers();
+        if (count(self::$_parameters) > 0 || self::$_flags['all']) {
+            self::controllers();
+            self::dumpautoload();
+        } else {
+            Console::quit(
+                'You should provide at least one table name, or use the "--all" flag.'
+                . "\n" . 'Check the help for more informations.'
+            );
+        }
     }
 }

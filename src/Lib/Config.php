@@ -14,7 +14,7 @@ use TC\Lib\Hash;
  * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
-class Config extends Hash
+abstract class Config extends Hash
 {
 
     /**
@@ -24,23 +24,13 @@ class Config extends Hash
     static protected $_config = [];
 
     /**
-     * Default constructor
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        die('This class should never be instanciated. Please call it statically');
-    }
-
-    /**
      * Loads the configuration file
      *
      * @param string $file File to load
      *
      * @return void
      */
-    public static function load($file)
+    public static function load(string $file)
     {
         if (file_exists($file)) {
             self::$_config += require_once($file);
@@ -56,7 +46,7 @@ class Config extends Hash
      *
      * @return mixed
      */
-    public static function get($param)
+    public static function get(string $param)
     {
         return parent::getValue(self::$_config, $param);
     }
@@ -68,7 +58,7 @@ class Config extends Hash
      * @param mixed  $value New value to assign
      * @return void
      */
-    public static function set($path, $value)
+    public static function set(string $path, $value)
     {
         return parent::setValue(self::$_config, $path, $value);
     }
@@ -80,7 +70,7 @@ class Config extends Hash
      *
      * @return void
      */
-    public static function merge($newparams)
+    public static function merge(array $newparams)
     {
         self::$_config += $newparams;
     }

@@ -26,12 +26,12 @@ class Str
     /**
      * Camelizes an underscored string
      *
-     * @param string  $str     String to convert
-     * @param boolean $ucfirst Flag to define if the first letter should be uppercased
+     * @param string $str     String to convert
+     * @param bool   $ucfirst Flag to define if the first letter should be uppercased
      *
      * @return string the camelized string
      */
-    public static function camelize($str, $ucfirst = false)
+    public static function camelize(string $str, bool $ucfirst = false)
     {
         $arr = explode('_', $str);
         $out = null;
@@ -53,7 +53,7 @@ class Str
      *
      * @return string The underscored string
      */
-    public static function underscore($str)
+    public static function underscore(string $str)
     {
         $arr = preg_split('/(?=[A-Z])/', $str, -1, PREG_SPLIT_NO_EMPTY);
         $out = join('_', $arr);
@@ -63,14 +63,14 @@ class Str
     /**
      * Returns a controller classname
      *
-     * @param string  $table     Table name
-     * @param boolean $namespace Flag to prefix the classname by App\Controller
+     * @param string $name      Controller name
+     * @param bool   $namespace Flag to prefix the classname by App\Controller namespace
      *                           namespace
      * @return string
      */
-    public static function controllerName($table, $namespace = false)
+    public static function controllerName(string $name, bool $namespace = false)
     {
-        $out = self::camelize(self::pluralize($table) . '_controller', true);
+        $out = self::camelize($name . '_controller', true);
         if ($namespace) {
             $out = 'App\\Controller\\' . $out;
         }
@@ -80,13 +80,13 @@ class Str
     /**
      * Returns an entity classname
      *
-     * @param string  $table     Table name
-     * @param boolean $namespace Flag to prefix the classname by App\Model\Entity
+     * @param string $table     Table name
+     * @param bool   $namespace Flag to prefix the classname by App\Model\Entity namespace
      *                           namespace
      *
      * @return string
      */
-    public static function entityName($table, $namespace = false)
+    public static function entityName(string $table, bool $namespace = false)
     {
         $out = self::camelize(self::singularize($table) . '_entity', true);
         if ($namespace) {
@@ -99,13 +99,13 @@ class Str
     /**
      * Returns a collection classname
      *
-     * @param string  $table     Table name
-     * @param boolean $namespace Flag to prefix the classname by App\Model\Collection
+     * @param string $table     Table name
+     * @param bool   $namespace Flag to prefix the classname by App\Model\Collection namespace
      *                           namespace
      *
      * @return string
      */
-    public static function collectionName($table, $namespace = false)
+    public static function collectionName(string $table, bool $namespace = false)
     {
         $out = self::camelize(self::pluralize($table) . '_collection', true);
         if ($namespace) {
@@ -122,7 +122,7 @@ class Str
      *
      * @return string
      */
-    public static function singularize($str)
+    public static function singularize(string $str)
     {
         $str = strtolower($str);
         if (key_exists($str, self::$pluralExceptions)) {
@@ -140,7 +140,7 @@ class Str
      *
      * @return string
      */
-    public static function pluralize($str)
+    public static function pluralize(string $str)
     {
         $str = strtolower($str);
         $key = array_search($str, self::$pluralExceptions);
@@ -150,5 +150,23 @@ class Str
             return $str . 's';
         }
         return $str;
+    }
+
+    /**
+     * Returns a pretty string to be displayed in views: underscores are replaced
+     * by spaces
+     *
+     * @param string $str     Underscored string
+     * @param bool   $ucfirst Wether or not to capitalize the first letter
+     *
+     * @return string
+     */
+    public static function prettify(string $str, bool $ucfirst = false)
+    {
+        $out = strtolower(str_replace('_', ' ', $str));
+        if ($ucfirst) {
+            $out = ucfirst($out);
+        }
+        return $out;
     }
 }

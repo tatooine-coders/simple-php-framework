@@ -15,7 +15,7 @@ use TC\Lib\Config;
  * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
-class DB
+abstract class DB
 {
 
     /**
@@ -59,14 +59,6 @@ class DB
      * @var PDO
      */
     private static $_db = null;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        die('Init function is not allowed');
-    }
 
     /**
      * Connects to the database and create the $_db object
@@ -152,7 +144,7 @@ class DB
      *
      * @return array
      */
-    public static function getTablesColumns($tables)
+    public static function getTablesColumns(array $tables)
     {
         $tab = [];
         foreach ($tables as $table) {
@@ -168,7 +160,7 @@ class DB
      *
      * @return array
      */
-    public static function getTableColumns($table)
+    public static function getTableColumns(string $table)
     {
         $query = "SELECT COLUMN_NAME, COLUMN_KEY, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS "
             . "WHERE TABLE_SCHEMA = '" . Config::get('db')['name'] . "' AND TABLE_NAME = '"
@@ -205,7 +197,7 @@ class DB
      *
      * @return string Converted string
      */
-    public static function fieldType($type)
+    public static function fieldType(string $type)
     {
         $type = strtolower($type);
         if (preg_match('/(char|text|blob)(\(\d+\))*/', $type)) {

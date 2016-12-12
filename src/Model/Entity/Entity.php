@@ -148,7 +148,7 @@ class Entity
      *
      * @param array $data Arrays of keys=>data
      */
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         $this->set($data, true);
     }
@@ -156,12 +156,12 @@ class Entity
     /**
      * Populates the array of data
      *
-     * @param array   $data    Multidimensionnal array of key=>value
-     * @param boolean $initial If set to true, the entity will be considered as clean
+     * @param array $data    Multidimensionnal array of key=>value
+     * @param bool  $initial If set to true, the entity will be considered as clean
      *
      * @return void
      */
-    public function set($data = [], $initial = false)
+    public function set(array $data = [], bool $initial = false)
     {
         if (!empty($data)) {
             foreach ($data as $field => $value) {
@@ -180,7 +180,7 @@ class Entity
      *
      * @return void
      */
-    public function __set($field, $value)
+    public function __set(string $field, $value)
     {
         if (array_search($field, $this->_fields) !== false) {
             if ($this->__get($field) != $value) {
@@ -197,7 +197,7 @@ class Entity
      *
      * @return mixed
      */
-    public function __get($field)
+    public function __get(string $field)
     {
         if (key_exists($field, $this->_data)) {
             return $this->_data[$field];

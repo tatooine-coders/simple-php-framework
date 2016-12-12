@@ -31,7 +31,7 @@ abstract class Logger
      *
      * @return array
      */
-    public static function getLogger($isArray = false)
+    public static function getLogger(bool $isArray = false)
     {
 
         if ($isArray == true) {
@@ -53,7 +53,7 @@ abstract class Logger
      *
      * @return void
      */
-    public static function addLog($type, $message)
+    public static function addLog(string $type, string $message)
     {
         self::$_logger[] = new Log($type, $message);
     }

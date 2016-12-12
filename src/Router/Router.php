@@ -2,7 +2,9 @@
 namespace TC\Router;
 
 use TC\Lib\Config;
-use TC\lib\Hash;
+use TC\Lib\Hash;
+use TC\Lib\Str;
+use TC\Controller\Controller;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -37,13 +39,21 @@ class Router
     static protected $_params = [];
 
     /**
+     * Controller
+     * @var Controller
+     */
+    static protected $_controllerName = null;
+
+    /**
      * Initializes the route from passed parameters
      *
      * @return void
      */
     public static function init()
     {
-        $route = explode('?', $_SERVER['REQUEST_URI']);
+        $basePath = preg_quote(dirname($_SERVER['SCRIPT_NAME']));
+
+        $route = explode('?', preg_replace("@$basePath@", '', $_SERVER['REQUEST_URI'], 1));
         $tmpPath = explode('/', $route[0]);
         $routePath = [];
         // Cleaning path
@@ -52,7 +62,6 @@ class Router
                 $routePath[] = $pathElement;
             }
         }
-
         // Controller
         if (isset($routePath[0]) && $routePath[0] !== '') {
             self::$_controller = $routePath[0];
@@ -91,7 +100,7 @@ class Router
      *
      * @return mixed Parameter value
      */
-    public static function getParam($param)
+    public static function getParam(string $param)
     {
         if (isset(self::$_params[$param])) {
             return self::$_params[$param];
@@ -128,16 +137,24 @@ class Router
     public static function executeAction()
     {
         // Check for controller
-        $controllerPath = 'app/Controller/' . self::$_controller . 'Controller.php';
+        $controllerPath = 'app/Controller/' . Str::controllerName(self::$_controller) . '.php';
 
         if (file_exists($controllerPath)) {
             require_once($controllerPath);
+
             $controllerName = '\\App\\Controller\\' . self::$_controller . 'Controller';
-            $controller = new $controllerName;
+            self::$_controllerName = new $controllerName;
             // Check for action
-            if (method_exists($controller, self::$_action)) {
+            if (method_exists(self::$_controllerName, self::$_action)) {
+                // Before_action
+                self::$_controllerName->beforeAction();
+                // Action
                 $action = self::$_action;
-                $controller->$action();
+                self::$_controllerName->$action();
+                // After action
+                self::$_controllerName->afterAction();
+                // Render
+                self::$_controllerName->render();
             } else {
                 die('404 - Action not found');
             }

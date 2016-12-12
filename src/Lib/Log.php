@@ -41,7 +41,7 @@ class Log
      *
      * @return void
      */
-    public function __construct($type, $message)
+    public function __construct(string $type, string $message)
     {
         $this->_type = $type;
         $this->_message = $message;

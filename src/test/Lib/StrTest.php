@@ -41,20 +41,36 @@ class StrTest extends TestCase
     }
 
     /**
-     * Test of the controllerName(), entityName() and collectionName() method
+     * Test of the controllerName()method
      *
      * @return void
      */
-    public function testName()
+    public function testControllerName()
     {
         $this->assertEquals('UsersCollection', Str::collectionName('users'));
         $this->assertEquals('App\\Model\\Collection\\UsersCollection', Str::collectionName('users', true));
+    }
 
+    /**
+     * Test of the collectionName() method
+     *
+     * @return void
+     */
+    public function testCollectionName()
+    {
+        $this->assertEquals('UsersCollection', Str::collectionName('users'));
+        $this->assertEquals('App\\Model\\Collection\\UsersCollection', Str::collectionName('users', true));
+    }
+
+    /**
+     * Test of the entityName() method
+     *
+     * @return void
+     */
+    public function testEntityName()
+    {
         $this->assertEquals('UserEntity', Str::entityName('users'));
         $this->assertEquals('App\\Model\\Entity\\UserEntity', Str::entityName('users', true));
-
-        $this->assertEquals('UsersController', Str::controllerName('users'));
-        $this->assertEquals('App\\Controller\\UsersController', Str::controllerName('users', true));
     }
 
     /**
@@ -80,5 +96,16 @@ class StrTest extends TestCase
         $this->assertEquals('cat', Str::singularize('cat'));
         $this->assertEquals('person', Str::singularize('people'));
         $this->assertEquals('person', Str::singularize('person'));
+    }
+
+    /**
+     * Test for the prettify() method
+     *
+     * @return void
+     */
+    public function testPrettify()
+    {
+        $this->assertEquals('some text', Str::prettify('some_text'));
+        $this->assertEquals('Some other text', Str::prettify('some_other_text', true));
     }
 }
