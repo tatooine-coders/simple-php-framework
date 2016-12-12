@@ -6,6 +6,8 @@ use TC\Lib\Console;
 use TC\Lib\DB;
 use TC\Lib\File;
 use TC\Lib\Str;
+use TC\Model\Collection\Collection;
+use TC\Model\Entity\Entity;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -75,7 +77,7 @@ abstract class ControllersGenerator extends Generator
      */
     protected static function controller(string $table, array $attributes)
     {
-        echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::controllerName($table), 1)));
+        echo Console::nl('> Generating ' . Str::controllerName($table), 1, 'info');
 
         // Entity name
         $entityName = Str::entityName($table);
@@ -95,17 +97,10 @@ abstract class ControllersGenerator extends Generator
         if (class_exists($entityFullName)) {
             $entity = new $entityFullName;
         } else {
-            echo Console::warning(
-                File::nl(
-                    0,
-                    Console::indent(
-                        '> Entity "' . $entityFullName . '" does not exist. '
-                        . 'An empty one will be used to generate the controller'
-                    ),
-                    2
-                )
-            );
-            $entity = new \TC\Model\Entity\Entity;
+            $errmess = '> Entity "' . $entityFullName . '" does not exist. '
+                . 'An empty one will be used to generate the controller';
+            echo Console::nl($errmess, 2, 'warning');
+            $entity = new Entity;
         }
         // Entity primary key
         $entityPk = $entity->getPrimary();
@@ -113,17 +108,10 @@ abstract class ControllersGenerator extends Generator
         if (class_exists($collectionFullName)) {
             $collection = new $collectionFullName;
         } else {
-            echo Console::warning(
-                File::nl(
-                    0,
-                    Console::indent(
-                        '> Collection "' . $collectionFullName . '" does not exist. '
-                        . 'An empty one will be used to generate the controller'
-                    ),
-                    2
-                )
-            );
-            $collection = new \TC\Model\Collection\Collection();
+            $errmess = '> Collection "' . $collectionFullName . '" does not exist. '
+                . 'An empty one will be used to generate the controller';
+            echo Console::nl($errmess, 2, 'warning');
+            $collection = new Collection();
         }
         // Output folder
         $folder = 'app/Controller/';
@@ -243,9 +231,8 @@ abstract class ControllersGenerator extends Generator
             $current .= "}\n";
             file_put_contents($file, $current);
         } else {
-            echo Console::warning(
-                File::nl(0, Console::indent('>>> Can\'t write file "' . $file . '" because it already exists', 2))
-            );
+            $errmess='>>> Can\'t write file "' . $file . '" because it already exists';
+            echo Console::nl($errmess, 2, 'warning');
         }
     }
 

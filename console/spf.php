@@ -67,7 +67,7 @@ for ($i = 3; $i < $argc; $i++) {
 // Checks if $action is a flag:
 $trimmedTarget = ltrim($target, '--');
 if ($trimmedTarget != $target) {
-    $target = null;
+    $target = '';
     $flags[] = $trimmedTarget;
 }
 

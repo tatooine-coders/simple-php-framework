@@ -184,21 +184,48 @@ class Console
     }
 
     /**
-     * Indents a text with a given depth
+     * Creates a new line, indented and of the given style.
      *
-     * @param string|array $text  Text with line breaks or array of lines
-     * @param int          $depth Indentation depth
+     * If the line contains line breaks, they will be cleaned so
+     * each line is properly indented. Tabs are replaced by INDENT.
+     *
+     * @param string $text   Text to display
+     * @param int    $indent Indent size
+     * @param string $style  Type of message. Can be 'error', 'info' or 'warning'
      *
      * @return string
      */
-    public static function indent(string $text, int $depth = 0)
+    public static function nl(string $text = null, int $indent = 0, string $style = null)
     {
-        if (!is_array($text)) {
-            $text = preg_split('/\n/', $text);
+        // Check if line contains multiples ones
+        $lines = explode("\n", $text);
+        if (count($lines) > 1) {
+            return self::ml($lines, $indent, $style);
+        } else {
+            $text= str_replace("\t", self::INDENT, $text);
+            if (in_array($style, ['error', 'info', 'warning'])) {
+                $text = self::$style($text);
+            }
+
+            return str_repeat(self::INDENT, $indent) . $text . "\n";
         }
-        foreach ($text as $k => $v) {
-            $text[$k] = str_repeat(self::INDENT, $depth) . $v;
+    }
+
+    /**
+     * Returns a paragraph formed with a list of lines
+     *
+     * @param array  $text   List of lines
+     * @param int    $indent Indent size
+     * @param string $style  Type of message. Can be 'error', 'info' or 'warning'
+     *
+     * @return string
+     */
+    public static function ml(array $text, int $indent = 0, string $style = null)
+    {
+        $out = null;
+        foreach ($text as $line) {
+            $out .= self::nl($line, $indent, $style);
         }
-        return implode("\n", $text);
+        return $out;
     }
 }

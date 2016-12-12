@@ -39,11 +39,11 @@ abstract class ModelsGenerator extends Generator
     /**
      * Returns a suffix string to set in class Docblock declaration
      *
-     * @param string $value Type of column
+     * @param array $value Type of column with configuration values
      *
      * @return string
      */
-    protected static function getSuffix(string $value)
+    protected static function getSuffix(array $value)
     {
         if ($value['isPrimary']) {
             $suffix = " Primary key";
@@ -111,7 +111,7 @@ abstract class ModelsGenerator extends Generator
      */
     protected static function entity(string $table, array $attributes)
     {
-        echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::entityName($table), 1)));
+        echo Console::nl('> Generating ' . Str::entityName($table), 1, 'info');
 
         $stringList = null;
         $fieldsList = [];
@@ -220,9 +220,8 @@ abstract class ModelsGenerator extends Generator
             $current .= "}\n";
             file_put_contents($file, $current);
         } else {
-            echo Console::warning(
-                File::nl(0, Console::indent('>>> Can\'t write file "' . $file . '" because it already exists.', 2))
-            );
+            $errmess = '>>> Can\'t write file "' . $file . '" because it already exists.';
+            echo Console::nl($errmess, 2, 'warning');
         }
     }
 
@@ -236,7 +235,7 @@ abstract class ModelsGenerator extends Generator
      */
     protected static function collection(string $table, array $attributes)
     {
-        echo Console::info(File::nl(0, Console::indent('> Generating ' . Str::collectionName($table), 1)));
+        echo Console::nl('> Generating ' . Str::collectionName($table), 1, 'info');
 
         $folder = 'app/Model/Collection/';
         if (!file_exists($folder)) {
@@ -275,9 +274,8 @@ abstract class ModelsGenerator extends Generator
             $current .= "}\n";
             file_put_contents($file, $current);
         } else {
-            echo Console::warning(
-                File::nl(0, Console::indent('>>> Can\'t write file "' . $file . '" because it already exists.', 2))
-            );
+            $errmess = '>>> Can\'t write file "' . $file . '" because it already exists.';
+            echo Console::nl($errmess, 2, 'warning');
         }
     }
 

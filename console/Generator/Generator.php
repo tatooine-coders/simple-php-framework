@@ -1,7 +1,7 @@
 <?php
 namespace TC\Console\Generator;
 
-use TC\Lib\Config;
+use TC\Lib\Console;
 
 /**
  * This file is part of the Simple PHP Framework
@@ -55,7 +55,7 @@ class Generator
             if (key_exists($flag, static::$_flags)) {
                 static::$_flags[$flag] = !static::$_flags[$flag];
             } else {
-                echo "Note: Unknown flag $flag. This will be ignored\n";
+                echo Console::warning("Note: Unknown flag $flag. This will be ignored", 0, 'warning');
             }
         }
 
