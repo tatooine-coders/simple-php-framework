@@ -15,7 +15,7 @@ use TC\Lib\Config;
  * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
-class DB
+abstract class DB
 {
 
     /**
@@ -59,14 +59,6 @@ class DB
      * @var PDO
      */
     private static $_db = null;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        die('Init function is not allowed');
-    }
 
     /**
      * Connects to the database and create the $_db object

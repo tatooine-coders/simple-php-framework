@@ -14,7 +14,7 @@ use TC\Lib\Hash;
  * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     https://github.com/tatooine-coders/simple-php-framework/
  */
-class Config extends Hash
+abstract class Config extends Hash
 {
 
     /**
@@ -22,16 +22,6 @@ class Config extends Hash
      * @var array mixed
      */
     static protected $_config = [];
-
-    /**
-     * Default constructor
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        die('This class should never be instanciated. Please call it statically');
-    }
 
     /**
      * Loads the configuration file
